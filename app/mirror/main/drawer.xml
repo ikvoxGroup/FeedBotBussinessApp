@@ -1,0 +1,53 @@
+<!-- [ Mirror metadata ] generatedAt: 1465894095365 -->
+<!-- Generated screen file. Fill the id tags below with content with
+which to populate your previewed layout. For a complete specification
+of sample data, please see http://jimulabs.com/sample-data-specifications/ 
+
+Valid attributes on <screen> tag: theme="@style/someTheme" inEditMode="false" overlay="@drawable/mockup" -->
+<screen>
+    <_content layout="@layout/drawer">
+        <!-- ImageView Examples:
+        <imageViewCover src="@drawable/image_resource" />
+        <imageViewCover src="relative_path/image.jpg" /> -->
+        <imageViewCover />
+        <!-- TextView Examples:
+        <textViewName text="@string/string_resource" />
+        <textViewName text="Text literal" textSize="14sp" /> -->
+        <textViewName />
+        <textViewUsername />
+        <imageViewToggle />
+        <imageViewPicture />
+        <imageViewAddAccount />
+        <textViewAddAccount />
+        <imageViewManageAccount />
+        <textViewManageAccount />
+        <recyclerViewDrawer layoutManager="linear:vertical">
+        <!-- Examples of valid layoutManager values: "linear", "staggeredGrid:5:horizontal", "staggeredGrid:4" -->
+            <items layout="@android:layout/simple_list_item_1" >
+                <_item>
+                    <text1>Dalmatian</text1>
+                </_item>
+                <_item>
+                    <text1>Great Dane</text1>
+                </_item>
+                <_item>
+                    <text1>Shi Tzu</text1>
+                </_item>
+                <_item>
+                    <text1>Corgi</text1>
+                </_item>
+                <_item>
+                    <text1>Labrador</text1>
+                </_item>
+                <_item>
+                    <text1>Doberman</text1>
+                </_item>
+                <_item>
+                    <text1>Chihuahua</text1>
+                </_item>
+            </items>
+                </recyclerViewDrawer>
+        <imageViewSettings />
+        <textViewSettings />
+    </_content>
+</screen>

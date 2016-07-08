@@ -1,0 +1,60 @@
+<!-- [ Mirror metadata ] generatedAt: 1465894095353 -->
+<!-- Generated screen file. Fill the id tags below with content with
+which to populate your previewed layout. For a complete specification
+of sample data, please see http://jimulabs.com/sample-data-specifications/ 
+
+Valid attributes on <screen> tag: theme="@style/someTheme" inEditMode="false" overlay="@drawable/mockup" -->
+<screen>
+    <_content layout="@layout/activity_settings">
+        <statusBar>
+            <!-- Replace this FrameLayout with a fragment like so:
+            <_content layout="@layout/my_fragment_layout">
+                <my_text_view>TextView in fragment</my_text_view>
+            </_content>
+            -->
+        </statusBar>
+        <!-- TextView Examples:
+        <textView text="@string/string_resource" />
+        <textView text="Text literal" textSize="14sp" /> -->
+        <textView />
+        <frameLayoutSwitch>
+            <!-- Replace this FrameLayout with a fragment like so:
+            <_content layout="@layout/my_fragment_layout">
+                <my_text_view>TextView in fragment</my_text_view>
+            </_content>
+            -->
+        </frameLayoutSwitch>
+        <frameLayoutCheckBox>
+            <!-- Replace this FrameLayout with a fragment like so:
+            <_content layout="@layout/my_fragment_layout">
+                <my_text_view>TextView in fragment</my_text_view>
+            </_content>
+            -->
+        </frameLayoutCheckBox>
+        <frameLayoutRadioButton>
+            <!-- Replace this FrameLayout with a fragment like so:
+            <_content layout="@layout/my_fragment_layout">
+                <my_text_view>TextView in fragment</my_text_view>
+            </_content>
+            -->
+        </frameLayoutRadioButton>
+        <textViewAdvancedSetting />
+        <!-- ImageView Examples:
+        <imageViewPhone3 src="@drawable/image_resource" />
+        <imageViewPhone3 src="relative_path/image.jpg" /> -->
+        <imageViewPhone3 />
+        <imageViewPhone2 />
+        <imageViewPhone />
+        <textViewTheme />
+        <textViewThemeDescription />
+        <frameLayout>
+            <!-- Replace this FrameLayout with a fragment like so:
+            <_content layout="@layout/my_fragment_layout">
+                <my_text_view>TextView in fragment</my_text_view>
+            </_content>
+            -->
+        </frameLayout>
+        <imageViewFacebook />
+        <imageViewSend />
+    </_content>
+</screen>

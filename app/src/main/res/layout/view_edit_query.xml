@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cv_root_category"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="2dp"
+    android:layout_marginLeft="12dp"
+    android:layout_marginRight="12dp"
+    android:layout_marginTop="2dp"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:orientation="vertical"
+    card_view:cardCornerRadius="2dp"
+    card_view:cardElevation="2dp"
+    card_view:cardUseCompatPadding="true">
+
+
+    <RelativeLayout
+        android:paddingLeft="6dp"
+        android:paddingStart="6dp"
+        android:layout_width="match_parent"
+        android:layout_height="96dp"
+        android:id="@+id/ViewLayout"
+        android:background="@drawable/card_selector">
+
+        <ImageView
+            android:id="@+id/ViewOption"
+            style="@style/card_thumbnail_image"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/ic_categories" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_toRightOf="@id/ViewOption"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/ViewQuery"
+                style="@style/Textview.Dark.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="Hello"/>
+
+            <TextView
+                android:id="@+id/ViewKeyword"
+                style="@style/Textview.Gray.Small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="hiiii"/>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/icon_more"
+            style="@style/IconFont.Large"
+            android:layout_marginTop="3dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:minHeight="16dp"
+            android:minWidth="16dp"
+            android:src="@drawable/more" />
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="ownerapp.com.ikvox.pratikriya">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
+
+
+    <application
+        android:name=".crashReportSender.MainApp"
+        android:allowBackup="true"
+        android:icon="@drawable/feedbot_final"
+        android:label="Feedbot Bussiness"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+        <activity
+            android:name=".SplashActivity"
+            android:launchMode="singleTop" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Settings"
+            android:label="@string/action_settings"
+            android:windowSoftInputMode="adjustPan" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".Query_main"
+            android:label="Query"
+            android:windowSoftInputMode="adjustPan" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".crm.CRM_activity"
+            android:label="CRM"
+            android:windowSoftInputMode="adjustPan" >
+
+        </activity>
+    <activity
+        android:name=".crm.Branch.BranchLayoutDetails.BranchDetailsLayout"
+        android:windowSoftInputMode="adjustPan" >
+    </activity>
+        <activity
+            android:name=".crm.Feedback.FeedbackReportDetails.FeedbackbranchDetails"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
+        <activity
+            android:name=".crm.Feedback.FeedbackReportDetails.FeedbackAssign"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
+        <activity
+            android:name=".AddQuery"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
+        <activity
+            android:name=".Fragments.Reports"
+            android:label="Reports"
+            android:windowSoftInputMode="adjustPan" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".DetailActivity"
+            android:label="@string/title_activity_news_detail" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity android:name=".MainActivity"/>
+        <activity android:name=".LoginActivity"/>
+        <activity android:name=".SignupActivity"/>
+        <activity android:name=".graphReport.GraphView">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity android:name=".BarChart"/>
+        <activity android:name=".Edit_profile">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <service android:name=".GetEmployeeDetailsService"/>
+    </application>
+
+</manifest>

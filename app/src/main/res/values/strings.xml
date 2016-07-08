@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Feedbot Business</string>
+    <string name="facebook_app_id">1000287906728420</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="drawer_open">open drawer</string>
+    <string name="drawer_close">close drawer</string>
+    <string name="about">IKVOX IS A TECHNOLOGY COMPANY SERVING CUSTOMERS AND COMMUNITIES WITH CUTTING EDGE PRODUCTS AND SERVICES. EACH OF OUR PRODUCTS AND SERVICES ARE COMMITTED TOWARDS MAKING THE LIVES OF OUR CUSTOMERS BETTER AND EASIER.</string>
+    <string name="action_about">About</string>
+    <string name="website">ikvox.com</string>
+    <string name="github">Designed By IkVox Creative Team         </string>
+    <string name="title_activity_news_detail">NewsDetail</string>
+
+    <!-- Sliding up-->
+    <string name="action_hide">Hide Panel</string>
+    <string name="action_show">Show Panel</string>
+    <string name="action_anchor_enable">Enable Anchor Point</string>
+    <string name="action_anchor_disable">Disable Anchor Point</string>
+    <string name="hello"><![CDATA[<b>The Awesome Sliding Up Panel</b><br/> Brought to you by<br/><a href="http://umanoapp.com">http://umanoapp.com</a>]]></string>
+    <string name="follow"><![CDATA[Follow us<br/>on <a href="http://twitter.com/umanoapp">Twitter</a>]]></string>
+
+    <string-array name="drawer">
+        <item>@string/home</item>
+
+
+    </string-array>
+    <string name="home">Home</string>
+
+
+
+    <array name="drawerIcons">
+        <item>@drawable/home</item>
+
+    </array>
+
+    <string name="icon_more_ver"></string>
+
+</resources>

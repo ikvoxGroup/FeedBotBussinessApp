@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:clickable="true"
+    app:cardBackgroundColor="#fff"
+    android:backgroundTint="#fff"
+    android:layout_margin="5dp"
+    app:cardCornerRadius="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="20dp"
+            >
+<android.support.design.widget.TextInputLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="Query"
+    android:id="@+id/et"
+    android:textColorHint="#ff0000">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/QueryMain"
+            android:textColor="#000"
+
+            android:layout_gravity="center_horizontal"/>
+</android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="KeyWord"
+                android:id="@+id/etk"
+                android:textColorHint="#ff0000">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/QueryKeywordMain"
+                android:textColor="#000000"
+                android:textColorHint="#000"
+                android:layout_gravity="center_horizontal"/>
+            </android.support.design.widget.TextInputLayout>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rg"
+                android:orientation="horizontal">
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rb1"
+                    android:textColor="#000"
+                    android:text="2 Options"
+                    android:layout_margin="5dp"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4 Options"
+                    android:id="@+id/rb2"
+                    android:textColor="#000"
+                    android:layout_margin="5dp"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sliding Bar"
+                    android:id="@+id/rb3"
+                    android:textColor="#000"
+                    android:layout_margin="5dp"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rating Bar"
+                    android:id="@+id/rb4"
+                    android:textColor="#000"
+                    android:layout_margin="5dp"/>
+            </RadioGroup>
+        </HorizontalScrollView>
+        </LinearLayout>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/displayOptions"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_weight="0.9">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Query "
+                android:textColor="#000"
+                android:textSize="18sp"
+                android:gravity="center"
+                android:id="@+id/query"
+                android:layout_weight="0.1"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:id="@+id/OptionContent"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="0.8">
+
+            </LinearLayout>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
+            android:id="@+id/brb"
+            android:layout_weight="0.25">
+
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                card_view:rippleColor="#123"
+                android:layout_marginRight="20dp"
+                android:layout_alignParentBottom="true"
+                card_view:fabSize="normal"
+                app:layout_anchor="@id/brb"
+                app:layout_anchorGravity="bottom|right|end"
+                android:src="@drawable/ic_check"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="10dp"
+                android:visibility="invisible"
+                android:id="@+id/finish"/>
+
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                card_view:fabSize="normal"
+                android:layout_alignParentBottom="true"
+                android:src="@drawable/ic_add"
+                android:id="@+id/next"
+                android:layout_marginBottom="5dp"
+                android:gravity="center"
+                app:fabSize="mini"
+                app:layout_anchor="@id/brb"
+                app:layout_anchorGravity="bottom|right|end"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                card_view:rippleColor="#123"
+                card_view:fabSize="normal"
+                android:visibility="invisible"
+                android:layout_marginLeft="20dp"
+                android:layout_alignParentBottom="true"
+                android:src="@drawable/ic_add"
+                android:id="@+id/add"
+                app:layout_anchor="@id/brb"
+                app:layout_anchorGravity="bottom|right|end"
+                android:layout_marginBottom="5dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="10dp"/>
+        </LinearLayout>
+</LinearLayout>
+
+    </LinearLayout>
+
+
+</android.support.v7.widget.CardView>
