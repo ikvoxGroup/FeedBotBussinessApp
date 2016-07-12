@@ -528,7 +528,7 @@ public class FeedbackAssign extends ActionBarActivity {
                     String BodyOwner = EmployeeName.getText().toString() + " has been assigned to look after the Query( " + Query + " ) ";
                     String subject = "Query Assigned";
                     String BodyAssignee = Fname+" "+Lname+ " has assigned you to look after the Query ( " + Query + " ) ASAP.";
-                        Assignee=EmployeeMail.getText().toString();
+                        Assignee=EmployeeName.getText().toString();
                         send.sendMail(subject,BodyOwner,"noreply.ikvox@gmail.com",mail);
                         send1.sendMail(subject,BodyAssignee,"noreply.ikvox@gmail.com", Assignee);
 
