@@ -145,119 +145,124 @@ public class FeedbackAssign extends ActionBarActivity {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-               // Toast.makeText(getApplicationContext(), "onItemClick", Toast.LENGTH_SHORT).show();
-                noti.setImageResource(R.drawable.down);
-                mLayout.setAnchorPoint(1.0f);
-                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-                selectedFromList = (String) (lv.getItemAtPosition(position));
-                Query.setText(selectedFromList);
-                if(Query.equals("")){
+                // Toast.makeText(getApplicationContext(), "onItemClick", Toast.LENGTH_SHORT).show();
+                try {
+                    noti.setImageResource(R.drawable.down);
+                    mLayout.setAnchorPoint(1.0f);
+                    mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                    mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                    selectedFromList = (String) (lv.getItemAtPosition(position));
+                    Query.setText(selectedFromList);
+                    if (Query.equals("")) {
 
-                    Assign.setEnabled(false);
-                    ClickAssign.setVisibility(View.INVISIBLE);
+                        Assign.setEnabled(false);
+                        ClickAssign.setVisibility(View.INVISIBLE);
 
-                }
-                else{
+                    } else {
 
-                    Assign.setEnabled(true);
-                    ClickAssign.setVisibility(View.VISIBLE);
+                        Assign.setEnabled(true);
+                        ClickAssign.setVisibility(View.VISIBLE);
 
-                }
-                //need some changes in below to select more query and also it should be in dynamic
+                    }
+                    //need some changes in below to select more query and also it should be in dynamic
 
-                if  (selectedFromList.equals("Q1")) {
+                    if (selectedFromList.equals("Q1")) {
 
-                    NFeedback=String.valueOf(Math.round((Integer.parseInt(FeedbackbranchDetails.FeedbackNumber)))- FeedbackbranchDetails.a);
+                        NFeedback = String.valueOf(Math.round((Integer.parseInt(FeedbackbranchDetails.FeedbackNumber))) - FeedbackbranchDetails.a);
 
-                    PositiveFeedback.setText("Total No. of Positive Feedback: " +String.valueOf(FeedbackbranchDetails.a));
-                    NegativeFeedback.setText("Total No. of Negative Feedback: " + NFeedback);
-
-                    /*adapter = new MyCustomAdapter(FeedbackAssign.this, Data.getData());
-                    Content.setAdapter(adapter);*/
-
-                }else if(selectedFromList.equals("Q2")) {
-
-                    NFeedback=String.valueOf(Math.round((Integer.parseInt(FeedbackbranchDetails.FeedbackNumber)))- FeedbackbranchDetails.b);
-
-                    PositiveFeedback.setText("Total No. of Positive Feedback: " +String.valueOf(FeedbackbranchDetails.b));
-                    NegativeFeedback.setText("Total No. of Negative Feedback: " + NFeedback);
+                        PositiveFeedback.setText("Total No. of Positive Feedback: " + String.valueOf(FeedbackbranchDetails.a));
+                        NegativeFeedback.setText("Total No. of Negative Feedback: " + NFeedback);
 
                     /*adapter = new MyCustomAdapter(FeedbackAssign.this, Data.getData());
                     Content.setAdapter(adapter);*/
 
-                }else if(selectedFromList.equals("Q3")) {
+                    } else if (selectedFromList.equals("Q2")) {
 
-                    NFeedback=String.valueOf(Math.round((Integer.parseInt(FeedbackbranchDetails.FeedbackNumber)))- FeedbackbranchDetails.c);
+                        NFeedback = String.valueOf(Math.round((Integer.parseInt(FeedbackbranchDetails.FeedbackNumber))) - FeedbackbranchDetails.b);
 
-                    PositiveFeedback.setText("Total No. of Positive Feedback: " +String.valueOf(FeedbackbranchDetails.c));
-                    NegativeFeedback.setText("Total No. of Negative Feedback: " + NFeedback);
-
-                    /*adapter = new MyCustomAdapter(FeedbackAssign.this, Data.getData());
-                    Content.setAdapter(adapter);*/
-
-                }else if(selectedFromList.equals("Q4")) {
-
-                    NFeedback=String.valueOf(Math.round((Integer.parseInt(FeedbackbranchDetails.FeedbackNumber)))- FeedbackbranchDetails.d);
-
-                    PositiveFeedback.setText("Total No. of Positive Feedback: " +String.valueOf(FeedbackbranchDetails.d));
-                    NegativeFeedback.setText("Total No. of Negative Feedback: " + NFeedback);
+                        PositiveFeedback.setText("Total No. of Positive Feedback: " + String.valueOf(FeedbackbranchDetails.b));
+                        NegativeFeedback.setText("Total No. of Negative Feedback: " + NFeedback);
 
                     /*adapter = new MyCustomAdapter(FeedbackAssign.this, Data.getData());
                     Content.setAdapter(adapter);*/
 
-                }else if(selectedFromList.equals("Q5")) {
+                    } else if (selectedFromList.equals("Q3")) {
 
-                    NFeedback=String.valueOf(Math.round((Integer.parseInt(FeedbackbranchDetails.FeedbackNumber)))- FeedbackbranchDetails.e);
+                        NFeedback = String.valueOf(Math.round((Integer.parseInt(FeedbackbranchDetails.FeedbackNumber))) - FeedbackbranchDetails.c);
 
-                    PositiveFeedback.setText("Total No. of Positive Feedback: " +String.valueOf(FeedbackbranchDetails.e));
-                    NegativeFeedback.setText("Total No. of Negative Feedback: " + NFeedback);
-
-                    /*adapter = new MyCustomAdapter(FeedbackAssign.this, Data.getData());
-                    Content.setAdapter(adapter);*/
-
-                }else if(selectedFromList.equals("Q6")) {
-
-                    NFeedback=String.valueOf(Math.round((Integer.parseInt(FeedbackbranchDetails.FeedbackNumber)))- FeedbackbranchDetails.f);
-
-                    PositiveFeedback.setText("Total No. of Positive Feedback: " +String.valueOf(FeedbackbranchDetails.f));
-                    NegativeFeedback.setText("Total No. of Negative Feedback: " + NFeedback);
+                        PositiveFeedback.setText("Total No. of Positive Feedback: " + String.valueOf(FeedbackbranchDetails.c));
+                        NegativeFeedback.setText("Total No. of Negative Feedback: " + NFeedback);
 
                     /*adapter = new MyCustomAdapter(FeedbackAssign.this, Data.getData());
                     Content.setAdapter(adapter);*/
 
-                }else if(selectedFromList.equals("Q7")) {
+                    } else if (selectedFromList.equals("Q4")) {
 
-                    NFeedback=String.valueOf(Math.round((Integer.parseInt(FeedbackbranchDetails.FeedbackNumber)))- FeedbackbranchDetails.g);
+                        NFeedback = String.valueOf(Math.round((Integer.parseInt(FeedbackbranchDetails.FeedbackNumber))) - FeedbackbranchDetails.d);
 
-                    PositiveFeedback.setText("Total No. of Positive Feedback: " +String.valueOf(FeedbackbranchDetails.g));
-                    NegativeFeedback.setText("Total No. of Negative Feedback: " + NFeedback);
-
-                    /*adapter = new MyCustomAdapter(FeedbackAssign.this, Data.getData());
-                    Content.setAdapter(adapter);*/
-
-                }else if(selectedFromList.equals("Q8")) {
-
-                    NFeedback=String.valueOf(Math.round((Integer.parseInt(FeedbackbranchDetails.FeedbackNumber)))- FeedbackbranchDetails.h);
-
-                    PositiveFeedback.setText("Total No. of Positive Feedback: " +String.valueOf(FeedbackbranchDetails.h));
-                    NegativeFeedback.setText("Total No. of Negative Feedback: " + NFeedback);
+                        PositiveFeedback.setText("Total No. of Positive Feedback: " + String.valueOf(FeedbackbranchDetails.d));
+                        NegativeFeedback.setText("Total No. of Negative Feedback: " + NFeedback);
 
                     /*adapter = new MyCustomAdapter(FeedbackAssign.this, Data.getData());
                     Content.setAdapter(adapter);*/
 
-                }else if(selectedFromList.equals("Q9")) {
+                    } else if (selectedFromList.equals("Q5")) {
 
-                    NFeedback=String.valueOf(Math.round((Integer.parseInt(FeedbackbranchDetails.FeedbackNumber)))- FeedbackbranchDetails.i);
+                        NFeedback = String.valueOf(Math.round((Integer.parseInt(FeedbackbranchDetails.FeedbackNumber))) - FeedbackbranchDetails.e);
 
-                    PositiveFeedback.setText("Total No. of Positive Feedback: " +String.valueOf(FeedbackbranchDetails.i));
-                    NegativeFeedback.setText("Total No. of Negative Feedback: " + NFeedback);
+                        PositiveFeedback.setText("Total No. of Positive Feedback: " + String.valueOf(FeedbackbranchDetails.e));
+                        NegativeFeedback.setText("Total No. of Negative Feedback: " + NFeedback);
 
                     /*adapter = new MyCustomAdapter(FeedbackAssign.this, Data.getData());
                     Content.setAdapter(adapter);*/
 
+                    } else if (selectedFromList.equals("Q6")) {
+
+                        NFeedback = String.valueOf(Math.round((Integer.parseInt(FeedbackbranchDetails.FeedbackNumber))) - FeedbackbranchDetails.f);
+
+                        PositiveFeedback.setText("Total No. of Positive Feedback: " + String.valueOf(FeedbackbranchDetails.f));
+                        NegativeFeedback.setText("Total No. of Negative Feedback: " + NFeedback);
+
+                    /*adapter = new MyCustomAdapter(FeedbackAssign.this, Data.getData());
+                    Content.setAdapter(adapter);*/
+
+                    } else if (selectedFromList.equals("Q7")) {
+
+                        NFeedback = String.valueOf(Math.round((Integer.parseInt(FeedbackbranchDetails.FeedbackNumber))) - FeedbackbranchDetails.g);
+
+                        PositiveFeedback.setText("Total No. of Positive Feedback: " + String.valueOf(FeedbackbranchDetails.g));
+                        NegativeFeedback.setText("Total No. of Negative Feedback: " + NFeedback);
+
+                    /*adapter = new MyCustomAdapter(FeedbackAssign.this, Data.getData());
+                    Content.setAdapter(adapter);*/
+
+                    } else if (selectedFromList.equals("Q8")) {
+
+                        NFeedback = String.valueOf(Math.round((Integer.parseInt(FeedbackbranchDetails.FeedbackNumber))) - FeedbackbranchDetails.h);
+
+                        PositiveFeedback.setText("Total No. of Positive Feedback: " + String.valueOf(FeedbackbranchDetails.h));
+                        NegativeFeedback.setText("Total No. of Negative Feedback: " + NFeedback);
+
+                    /*adapter = new MyCustomAdapter(FeedbackAssign.this, Data.getData());
+                    Content.setAdapter(adapter);*/
+
+                    } else if (selectedFromList.equals("Q9")) {
+
+                        NFeedback = String.valueOf(Math.round((Integer.parseInt(FeedbackbranchDetails.FeedbackNumber))) - FeedbackbranchDetails.i);
+
+                        PositiveFeedback.setText("Total No. of Positive Feedback: " + String.valueOf(FeedbackbranchDetails.i));
+                        NegativeFeedback.setText("Total No. of Negative Feedback: " + NFeedback);
+
+                    /*adapter = new MyCustomAdapter(FeedbackAssign.this, Data.getData());
+                    Content.setAdapter(adapter);*/
+
+                    }
+                } catch (Exception e) {
+                    PositiveFeedback.setText("Total No. of Positive Feedback: 0 ");
+                    NegativeFeedback.setText("Total No. of Negative Feedback: 0");
                 }
             }
+
         });
 
         Assign.setOnClickListener(new View.OnClickListener() {
