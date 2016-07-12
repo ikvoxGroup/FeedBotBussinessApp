@@ -28,7 +28,7 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.MyView
     private final View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            // Toast.makeText(context,"Clicked",Toast.LENGTH_SHORT).show();
+           // Toast.makeText(context,"Clicked",Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -54,36 +54,16 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.MyView
 
     @Override
     public void onBindViewHolder(final MyViewHolder myViewHolder, final int position) {
-        final TextView EmployeeName = (TextView) myViewHolder.view.findViewById(R.id.EmployeeName);
-        final TextView EmployeeDesignation = (TextView) myViewHolder.view.findViewById(R.id.EmployeeDesignation);
+        final TextView EmployeeName= (TextView)myViewHolder.view.findViewById(R.id.EmployeeName);
+        final TextView EmployeeDesignation= (TextView)myViewHolder.view.findViewById(R.id.EmployeeDesignation);
         final TextView EmployeeNumber = (TextView) myViewHolder.view.findViewById(R.id.EmployeeNumber);
-        final TextView EmployeeMail = (TextView) myViewHolder.view.findViewById(R.id.EmployeeMail);
+        final TextView EmployeeMail=(TextView)myViewHolder.view.findViewById(R.id.EmployeeMail);
 
         EmployeeName.setText(employee.get(position).EmployeeName);
         EmployeeDesignation.setText(employee.get(position).EmployeeDesignation);
         EmployeeNumber.setText(employee.get(position).EmployeeNumber);
         EmployeeMail.setText(employee.get(position).EmployeeMailId);
-/*
 
-        EmployeeNumber.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_CALL);
-                intent.setData(Uri.parse("tel:" + EmployeeNumber.getText().toString()));
-                if (checkSelfPermission(context ,Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    public void requestPermissions(@NonNull String[] permissions, int requestCode)
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for Activity#requestPermissions for more details.
-                    return;
-                }
-                context.startActivity(intent);
-            }
-        });
-*/
 
         /*if (position > previousPosition) { // We are scrolling DOWN
 
