@@ -550,7 +550,7 @@ public class FeedbackAssign extends ActionBarActivity {
                     }).start();
                     tick.setVisibility(View.VISIBLE);
                    // Toast.makeText(getApplicationContext(), "Query Assigned to "+Fname+""+Lname, Toast.LENGTH_SHORT).show();
-                    //Toast.makeText(getApplicationContext(), "Mail has been sent", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Mail has been sent", Toast.LENGTH_SHORT).show();
 
 
                     //store crm status details
