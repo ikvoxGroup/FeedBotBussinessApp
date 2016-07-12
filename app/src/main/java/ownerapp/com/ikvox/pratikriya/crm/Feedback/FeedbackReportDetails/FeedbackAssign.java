@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -32,11 +33,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.http.NameValuePair;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import ownerapp.com.ikvox.pratikriya.Database.MyDatabase;
 import ownerapp.com.ikvox.pratikriya.Database.QueryDatabase;
 import ownerapp.com.ikvox.pratikriya.EmailSender.GMailSender;
+import ownerapp.com.ikvox.pratikriya.JSONParserIkVox;
 import ownerapp.com.ikvox.pratikriya.MainActivity;
 import ownerapp.com.ikvox.pratikriya.R;
 import ownerapp.com.ikvox.pratikriya.crm.Branch.BranchLayoutDetails.EmployeeInformation;
@@ -54,8 +59,8 @@ public class FeedbackAssign extends ActionBarActivity {
     LinearLayout list;
     public static String selectedFromList;
     TextView PositiveFeedback, NegativeFeedback;
-    String PFeedback = "60";
-    String NFeedback = "40";
+    String PFeedback = "0";
+    String NFeedback = "0";
     LinearLayout Assign, AssignEmployee;
     RecyclerView Employee;
     AssignAdapter empAdapter;
@@ -78,6 +83,16 @@ public class FeedbackAssign extends ActionBarActivity {
 
     ImageView noti;
     static Context c;
+    TextView Query;
+
+    JSONParserIkVox jParser = new JSONParserIkVox();
+    JSONObject json;
+    private static String url_login = "http://ikvoxserver.78kuyxr39b.us-west-2.elasticbeanstalk.com/login.do";
+    private String resp;
+    private String errorMsg;
+
+
+   public static String Fname,Lname;
 
 
     @Override
@@ -103,7 +118,7 @@ public class FeedbackAssign extends ActionBarActivity {
         list.setBackgroundColor(MainActivity.color);
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
         OpenQuery = (RelativeLayout) findViewById(R.id.slidingQuery);
-        final TextView Query = (TextView) findViewById(R.id.selectQuery);
+        Query = (TextView) findViewById(R.id.selectQuery);
         PositiveFeedback = (TextView) findViewById(R.id.PositiveFeedback);
         NegativeFeedback = (TextView) findViewById(R.id.NegativeFeedback);
         Assign = (LinearLayout) findViewById(R.id.AssignLayout);
@@ -122,7 +137,10 @@ public class FeedbackAssign extends ActionBarActivity {
                 }
             }
         });
-        final ListView lv = (ListView) findViewById(R.id.listQuery);
+
+        final ListView lv = (ListView)findViewById(R.id.listQuery);
+
+
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -134,18 +152,109 @@ public class FeedbackAssign extends ActionBarActivity {
                 selectedFromList = (String) (lv.getItemAtPosition(position));
                 Query.setText(selectedFromList);
                 if(Query.equals("")){
-                    Assign.setEnabled(false);
-                    ClickAssign.setVisibility(View.INVISIBLE);}
-                else{
-                    Assign.setEnabled(true);
-                    ClickAssign.setVisibility(View.VISIBLE);}
-                //need some changes in below to select more query and also it should be in dynamic
-                if (selectedFromList.equals("Q1")) {
 
-                    PositiveFeedback.setText("Total No. of Positive Feedback: " + PFeedback);
+                    Assign.setEnabled(false);
+                    ClickAssign.setVisibility(View.INVISIBLE);
+
+                }
+                else{
+
+                    Assign.setEnabled(true);
+                    ClickAssign.setVisibility(View.VISIBLE);
+
+                }
+                //need some changes in below to select more query and also it should be in dynamic
+
+                if  (selectedFromList.equals("Q1")) {
+
+                    NFeedback=String.valueOf(Math.round((Integer.parseInt(FeedbackbranchDetails.FeedbackNumber)))- FeedbackbranchDetails.a);
+
+                    PositiveFeedback.setText("Total No. of Positive Feedback: " +String.valueOf(FeedbackbranchDetails.a));
                     NegativeFeedback.setText("Total No. of Negative Feedback: " + NFeedback);
+
                     /*adapter = new MyCustomAdapter(FeedbackAssign.this, Data.getData());
                     Content.setAdapter(adapter);*/
+
+                }else if(selectedFromList.equals("Q2")) {
+
+                    NFeedback=String.valueOf(Math.round((Integer.parseInt(FeedbackbranchDetails.FeedbackNumber)))- FeedbackbranchDetails.b);
+
+                    PositiveFeedback.setText("Total No. of Positive Feedback: " +String.valueOf(FeedbackbranchDetails.b));
+                    NegativeFeedback.setText("Total No. of Negative Feedback: " + NFeedback);
+
+                    /*adapter = new MyCustomAdapter(FeedbackAssign.this, Data.getData());
+                    Content.setAdapter(adapter);*/
+
+                }else if(selectedFromList.equals("Q3")) {
+
+                    NFeedback=String.valueOf(Math.round((Integer.parseInt(FeedbackbranchDetails.FeedbackNumber)))- FeedbackbranchDetails.c);
+
+                    PositiveFeedback.setText("Total No. of Positive Feedback: " +String.valueOf(FeedbackbranchDetails.c));
+                    NegativeFeedback.setText("Total No. of Negative Feedback: " + NFeedback);
+
+                    /*adapter = new MyCustomAdapter(FeedbackAssign.this, Data.getData());
+                    Content.setAdapter(adapter);*/
+
+                }else if(selectedFromList.equals("Q4")) {
+
+                    NFeedback=String.valueOf(Math.round((Integer.parseInt(FeedbackbranchDetails.FeedbackNumber)))- FeedbackbranchDetails.d);
+
+                    PositiveFeedback.setText("Total No. of Positive Feedback: " +String.valueOf(FeedbackbranchDetails.d));
+                    NegativeFeedback.setText("Total No. of Negative Feedback: " + NFeedback);
+
+                    /*adapter = new MyCustomAdapter(FeedbackAssign.this, Data.getData());
+                    Content.setAdapter(adapter);*/
+
+                }else if(selectedFromList.equals("Q5")) {
+
+                    NFeedback=String.valueOf(Math.round((Integer.parseInt(FeedbackbranchDetails.FeedbackNumber)))- FeedbackbranchDetails.e);
+
+                    PositiveFeedback.setText("Total No. of Positive Feedback: " +String.valueOf(FeedbackbranchDetails.e));
+                    NegativeFeedback.setText("Total No. of Negative Feedback: " + NFeedback);
+
+                    /*adapter = new MyCustomAdapter(FeedbackAssign.this, Data.getData());
+                    Content.setAdapter(adapter);*/
+
+                }else if(selectedFromList.equals("Q6")) {
+
+                    NFeedback=String.valueOf(Math.round((Integer.parseInt(FeedbackbranchDetails.FeedbackNumber)))- FeedbackbranchDetails.f);
+
+                    PositiveFeedback.setText("Total No. of Positive Feedback: " +String.valueOf(FeedbackbranchDetails.f));
+                    NegativeFeedback.setText("Total No. of Negative Feedback: " + NFeedback);
+
+                    /*adapter = new MyCustomAdapter(FeedbackAssign.this, Data.getData());
+                    Content.setAdapter(adapter);*/
+
+                }else if(selectedFromList.equals("Q7")) {
+
+                    NFeedback=String.valueOf(Math.round((Integer.parseInt(FeedbackbranchDetails.FeedbackNumber)))- FeedbackbranchDetails.g);
+
+                    PositiveFeedback.setText("Total No. of Positive Feedback: " +String.valueOf(FeedbackbranchDetails.g));
+                    NegativeFeedback.setText("Total No. of Negative Feedback: " + NFeedback);
+
+                    /*adapter = new MyCustomAdapter(FeedbackAssign.this, Data.getData());
+                    Content.setAdapter(adapter);*/
+
+                }else if(selectedFromList.equals("Q8")) {
+
+                    NFeedback=String.valueOf(Math.round((Integer.parseInt(FeedbackbranchDetails.FeedbackNumber)))- FeedbackbranchDetails.h);
+
+                    PositiveFeedback.setText("Total No. of Positive Feedback: " +String.valueOf(FeedbackbranchDetails.h));
+                    NegativeFeedback.setText("Total No. of Negative Feedback: " + NFeedback);
+
+                    /*adapter = new MyCustomAdapter(FeedbackAssign.this, Data.getData());
+                    Content.setAdapter(adapter);*/
+
+                }else if(selectedFromList.equals("Q9")) {
+
+                    NFeedback=String.valueOf(Math.round((Integer.parseInt(FeedbackbranchDetails.FeedbackNumber)))- FeedbackbranchDetails.i);
+
+                    PositiveFeedback.setText("Total No. of Positive Feedback: " +String.valueOf(FeedbackbranchDetails.i));
+                    NegativeFeedback.setText("Total No. of Negative Feedback: " + NFeedback);
+
+                    /*adapter = new MyCustomAdapter(FeedbackAssign.this, Data.getData());
+                    Content.setAdapter(adapter);*/
+
                 }
             }
         });
@@ -161,7 +270,7 @@ public class FeedbackAssign extends ActionBarActivity {
         });
 
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_list_item_1,
                 GetQuery.getData());
@@ -386,8 +495,8 @@ public class FeedbackAssign extends ActionBarActivity {
                     new Thread(new Runnable() {
                         public void run() {
                     String Query=null;
-                    String Fname=null;
-                    String Lname=null;
+                    Fname=null;
+                    Lname=null;
                     String mail=null;
                     qsdb = qdb.getWritableDatabase();
                     String qry = "Select Query from " + CompanyName + "_" + FBName + " where QueryNumber= '" + selectedFromList + "'";
@@ -419,10 +528,13 @@ public class FeedbackAssign extends ActionBarActivity {
 
                         send.sendMail(subject,BodyOwner,"noreply.ikvox@gmail.com",mail);
                         send1.sendMail(subject,BodyAssignee,"noreply.ikvox@gmail.com", EmployeeMail.getText().toString());
+
+
                     } catch (Exception e1) {
                         Log.d("Error Sending email", e1.toString());
                     }
 
+                    Toast.makeText(getApplicationContext(), "Query Assigned to "+Fname+""+Lname, Toast.LENGTH_SHORT).show();
 
                     sdb= getApplicationContext().openOrCreateDatabase(MyDatabase.DBNAME,MODE_PRIVATE,null);
                     sdb.execSQL("CREATE TABLE IF NOT EXISTS "
@@ -435,6 +547,15 @@ public class FeedbackAssign extends ActionBarActivity {
                         }
                     }).start();
                     Toast.makeText(getApplicationContext(), "Mail has been sent", Toast.LENGTH_SHORT).show();
+
+
+                    //store crm status details
+                    //new MyTask().execute();
+
+
+
+
+
                     return false;
                 }
 
@@ -459,6 +580,87 @@ public class FeedbackAssign extends ActionBarActivity {
 
         }
 
+
+    }
+    private class MyTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            //AndroidUtils.animateView(progressOverlay, image, animate, View.VISIBLE, 0.8f, 200);
+            super.onPreExecute();
+        }
+
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                    ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+/*
+                    postParameters.add(new BasicNameValuePair("CompanyName", CompanyName));
+                    postParameters.add(new BasicNameValuePair("BranchLocation",FBName ));
+                    postParameters.add(new BasicNameValuePair("QueryNumber",Query ));
+                    postParameters.add(new BasicNameValuePair("status", ));
+                    postParameters.add(new BasicNameValuePair("assignee", Fname+" "+Lname));
+                    postParameters.add(new BasicNameValuePair("assignedBy", ));*/
+                    json = jParser.makeHttpRequest(url_login, "GET", postParameters);
+                    String s = null;
+                    try {
+                        /*response = SimpleHttpClient
+                                .executeHttpPost(
+                                        "http://ikvoxserver.78kuyxr39b.us-west-2.elasticbeanstalk.com/login.do",
+                                        postParameters);*/
+
+                        s = json.getString("status");
+                        resp=s;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                     //   network=1;
+                        errorMsg = e.getMessage();
+                    }
+                }
+            }).start();
+            try {
+                Thread.sleep(5000);
+                /**
+                 * Inside the new thread we cannot update the main thread So
+                 * updating the main thread outside the new thread
+                 */
+                // Toast.makeText(LoginActivity.this, resp, Toast.LENGTH_LONG).show();
+
+            } catch (Exception e1){
+                e1.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            /*AndroidUtils.animateView(progressOverlay,image,animate, View.GONE, 0, 200);
+            resp="null";
+            if (error == 1) {
+
+                Toast.makeText(LoginActivity.this, "Wrong User Name or Password", Toast.LENGTH_SHORT).show();
+                error = 0;
+                network=0;
+            }
+            else if (network==1)
+            {
+                // Toast.makeText(LoginActivity.this, "Connectivity Problem!! Please try again and Check your Internet Connection.", Toast.LENGTH_SHORT).show();
+                //error = 0;
+                //network=0;
+
+            }
+
+            *//*if (!msg.equals(""))
+            {
+                Toast.makeText(LoginActivity.this, ""+msg, Toast.LENGTH_SHORT).show();
+            }*//*
+            //Toast.makeText(getApplicationContext(), "hiii", Toast.LENGTH_SHORT).show();*/
+            super.onPostExecute(aVoid);
+        }
 
     }
 }

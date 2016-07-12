@@ -81,7 +81,7 @@ public class FeedbackbranchDetails extends ActionBarActivity {
     public static ArrayList<String> QueryList;
     LinearLayout chart ;
     String Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9,Q10;
-    int a,b,c,d,e,f,g,h,i,j;
+    public static int a,b,c,d,e,f,g,h,i,j;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -277,7 +277,7 @@ public class FeedbackbranchDetails extends ActionBarActivity {
                     editor.putString(QS7, Q7);
                     editor.putString(QS8, Q8);
                     editor.putString(QS9, Q9);
-                    //editor.putString(QS10, Q10);
+                    editor.putString(QS10, Q10);
 
 
 
@@ -299,9 +299,12 @@ public class FeedbackbranchDetails extends ActionBarActivity {
             // AndroidUtils.animateView(progressOverlay, View.GONE, 0, 200);
             // ProgressBar progressBar = (ProgressBar)findViewById(R.id.progressBarChart);
             //progressBar.setVisibility(View.GONE);
+
             mProgressDialog.dismiss();
             if(show==1)
             {
+                TotalFeedback.setText("Total No. of Feedback: "+FeedbackNumber);
+
                 graph(a,b,c,d,e,f,g,h,i);
 
             }

@@ -58,7 +58,7 @@ public class GCMNotificationIntentService extends IntentService {
 				}
 				Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
 
-				sendNotification("Sandesh : "
+				sendNotification("Feedbot : "
 						+ extras.get(Config.MESSAGE_KEY));
 				Log.i(TAG, "Received: " + extras.toString());
 			}

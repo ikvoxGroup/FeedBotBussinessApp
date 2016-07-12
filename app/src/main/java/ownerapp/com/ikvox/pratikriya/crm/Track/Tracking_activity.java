@@ -56,6 +56,8 @@ public class Tracking_activity extends Fragment {
     public static ArrayList<String> branchArray;
    public static  Context c;
     ImageView noti;
+   public static ArrayList<inf> query;
+
     public Tracking_activity() {
         // Required empty public constructor
     }
@@ -107,6 +109,7 @@ public class Tracking_activity extends Fragment {
                 mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                 selectedFromList =(String) (lv.getItemAtPosition(position));
+
                 Query.setText(selectedFromList);
                     listAdapter = new TrackingAdapter(getActivity(),qry.getData());
                     mylist.setAdapter(listAdapter);
@@ -159,7 +162,7 @@ public class Tracking_activity extends Fragment {
 
         public static ArrayList<inf> getData() {
 
-            ArrayList<inf> query = new ArrayList<>();
+            query = new ArrayList<>();
             String selectQuery = "SELECT  Query, QueryType ,Keyword FROM " + CompanyName+"_"+selectedFromList;
             qsdb = qdb.getWritableDatabase();
             String count = "SELECT count(*) FROM "+CompanyName+"_"+selectedFromList;
@@ -186,6 +189,8 @@ public class Tracking_activity extends Fragment {
             return query;
         }
     }
+
+
     public static class GetBranch {
 
         public static ArrayList<String> getData() {
