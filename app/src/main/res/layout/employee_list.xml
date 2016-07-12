@@ -72,7 +72,10 @@
                         android:text="Employee Number"
                         android:layout_marginLeft="5dp"
                         android:id="@+id/EmployeeNumber"
-                        android:textColor="#000"/>
+                        android:textColor="#000"
+                        android:autoLink="phone"
+                        android:linksClickable="true"
+                        />
                     </LinearLayout>
 
                 <LinearLayout
@@ -92,7 +95,9 @@
                         android:layout_height="wrap_content"
                         android:text="Employee Mail"
                         android:id="@+id/EmployeeMail"
-                        android:textColor="#000"/>
+                        android:textColor="#000"
+                        android:autoLink="email"
+                        android:linksClickable="true"/>
 
                 </LinearLayout>
             </LinearLayout>
