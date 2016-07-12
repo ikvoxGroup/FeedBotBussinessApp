@@ -88,13 +88,13 @@ public class FeedbackAssign extends ActionBarActivity {
 
     JSONParserIkVox jParser = new JSONParserIkVox();
     JSONObject json;
-    private static String url_login = "http://ikvoxserver.78kuyxr39b.us-west-2.elasticbeanstalk.com/login.do";
+    private static String url_login = "http://ikvoxserver.78kuyxr39b.us-west-2.elasticbeanstalk.com/setStatus.do";
     private String resp;
     private String errorMsg;
 
 
    public static String Fname,Lname;
-    public static String Assignee;
+    public static  String Assignee;
 
 
     @Override
@@ -153,6 +153,9 @@ public class FeedbackAssign extends ActionBarActivity {
                 mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                 selectedFromList = (String) (lv.getItemAtPosition(position));
                 Query.setText(selectedFromList);
+                empAdapter = new AssignAdapter(FeedbackAssign.this, Employee_list.getData());
+                Employee.setAdapter(empAdapter);
+                Employee.setLayoutManager(new LinearLayoutManager(FeedbackAssign.this));
                 if(Query.equals("")){
 
                     Assign.setEnabled(false);
@@ -498,9 +501,10 @@ public class FeedbackAssign extends ActionBarActivity {
                     new Thread(new Runnable() {
                         public void run() {
                     String Query=null;
-                    Fname=null;
-                    Lname=null;
+                    //Fname=null;
+                    //Lname=null;
                     String mail=null;
+                    Assignee=null;
                     qsdb = qdb.getWritableDatabase();
                     String qry = "Select Query from " + CompanyName + "_" + FBName + " where QueryNumber= '" + selectedFromList + "'";
                     Cursor cursor = qsdb.rawQuery(qry, null);
@@ -525,10 +529,11 @@ public class FeedbackAssign extends ActionBarActivity {
                             "ikvox@1234");
                         GMailSender send1 = new GMailSender("noreply.ikvox@gmail.com",
                                 "ikvox@1234");
-                    String BodyOwner = EmployeeName.getText().toString() + " has been assigned to look after the Query( " + Query + " ) ";
+                        Assignee=EmployeeName.getText().toString();
+                    String BodyOwner = Assignee + " has been assigned to look after the Query( " + Query + " ) ";
                     String subject = "Query Assigned";
                     String BodyAssignee = Fname+" "+Lname+ " has assigned you to look after the Query ( " + Query + " ) ASAP.";
-                        Assignee=EmployeeName.getText().toString();
+
                         send.sendMail(subject,BodyOwner,"noreply.ikvox@gmail.com",mail);
                         send1.sendMail(subject,BodyAssignee,"noreply.ikvox@gmail.com", EmployeeMail.getText().toString());
 
@@ -549,7 +554,8 @@ public class FeedbackAssign extends ActionBarActivity {
                         }
                     }).start();
                     tick.setVisibility(View.VISIBLE);
-                   // Toast.makeText(getApplicationContext(), "Query Assigned to "+Fname+""+Lname, Toast.LENGTH_SHORT).show();
+                    Log.i("kush",Fname+" "+Lname+" "+Assignee+" ");
+                    Toast.makeText(getApplicationContext(), "Query Assigned to "+Assignee, Toast.LENGTH_SHORT).show();
                     Toast.makeText(getApplicationContext(), "Mail has been sent", Toast.LENGTH_SHORT).show();
 
 
@@ -600,6 +606,7 @@ public class FeedbackAssign extends ActionBarActivity {
                 @Override
                 public void run() {
 
+                    Log.i("kush",CompanyName+" "+FBName+" "+selectedFromList+" "+Assignee+" ");
                     ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
                     postParameters.add(new BasicNameValuePair("CompanyName", CompanyName));
                     postParameters.add(new BasicNameValuePair("BranchLocation",FBName ));
