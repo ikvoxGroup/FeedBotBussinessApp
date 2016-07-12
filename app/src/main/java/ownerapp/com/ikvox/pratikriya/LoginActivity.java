@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import ownerapp.com.ikvox.pratikriya.Database.MyDatabase;
 import ownerapp.com.ikvox.pratikriya.LoginSessionManagement.UserSessionManager;
 import ownerapp.com.ikvox.pratikriya.ProgBarAppear.AndroidUtils;
+import ownerapp.com.ikvox.pratikriya.gcmNotification.Config;
 
 
 /**
@@ -93,7 +94,7 @@ public class LoginActivity extends ActionBarActivity {
 
     GoogleCloudMessaging gcm;
     Context context;
-    String regId,email;
+    String regId,mobile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

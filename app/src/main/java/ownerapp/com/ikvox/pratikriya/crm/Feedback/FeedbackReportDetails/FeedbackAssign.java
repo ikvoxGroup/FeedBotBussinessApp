@@ -537,7 +537,6 @@ public class FeedbackAssign extends ActionBarActivity {
                         Log.d("Error Sending email", e1.toString());
                     }
 
-                    Toast.makeText(getApplicationContext(), "Query Assigned to "+Fname+""+Lname, Toast.LENGTH_SHORT).show();
 
                     sdb= getApplicationContext().openOrCreateDatabase(MyDatabase.DBNAME,MODE_PRIVATE,null);
                     sdb.execSQL("CREATE TABLE IF NOT EXISTS "
@@ -550,7 +549,8 @@ public class FeedbackAssign extends ActionBarActivity {
                         }
                     }).start();
                     tick.setVisibility(View.VISIBLE);
-                    Toast.makeText(getApplicationContext(), "Mail has been sent", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(getApplicationContext(), "Query Assigned to "+Fname+""+Lname, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "Mail has been sent", Toast.LENGTH_SHORT).show();
 
 
                     //store crm status details
