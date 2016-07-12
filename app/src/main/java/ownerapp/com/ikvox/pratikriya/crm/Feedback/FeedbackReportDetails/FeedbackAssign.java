@@ -616,7 +616,7 @@ public class FeedbackAssign extends ActionBarActivity {
                                 .executeHttpPost(
                                         "http://ikvoxserver.78kuyxr39b.us-west-2.elasticbeanstalk.com/login.do",
                                         postParameters);*/
-
+//tyr
                         s = json.getString("status");
                         resp=s;
                     } catch (Exception e) {
