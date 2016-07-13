@@ -149,11 +149,12 @@
                 card_view:fabSize="normal"
                 app:layout_anchor="@id/brb"
                 app:layout_anchorGravity="bottom|right|end"
-                android:src="@drawable/ic_check"
+                android:src="@drawable/close"
                 android:gravity="center_vertical"
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="10dp"
                 android:visibility="invisible"
+                app:backgroundTint="#b62a2a"
                 android:id="@+id/finish"/>
 
             <android.support.design.widget.FloatingActionButton
@@ -165,7 +166,9 @@
                 android:id="@+id/next"
                 android:layout_marginBottom="5dp"
                 android:gravity="center"
+                android:elevation="8dp"
                 app:fabSize="mini"
+                app:backgroundTint="#dcd9d9"
                 app:layout_anchor="@id/brb"
                 app:layout_anchorGravity="bottom|right|end"
                 android:layout_alignParentTop="true"
@@ -179,7 +182,7 @@
                 android:visibility="invisible"
                 android:layout_marginLeft="20dp"
                 android:layout_alignParentBottom="true"
-                android:src="@drawable/ic_add"
+                android:src="@drawable/correct"
                 android:id="@+id/add"
                 app:layout_anchor="@id/brb"
                 app:layout_anchorGravity="bottom|right|end"

@@ -991,7 +991,7 @@ public class Query_main extends AppCompatActivity {
                 show.setColorFilter(Color.rgb(70, 74, 166));
             } else if (OptMain.equals("4")) {
 
-                show.setColorFilter(Color.rgb(163, 166, 70));
+                show.setColorFilter(Color.rgb(230, 198, 19));
             }
 
             if (position > previousPosition) { // We are scrolling DOWN
@@ -1443,10 +1443,355 @@ public class Query_main extends AppCompatActivity {
             ViewLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    /*BranchDetailsLayout.BranchName(BranchName.getText().toString());
-                    Intent i = new Intent(context, BranchDetailsLayout.class);
-                    context.startActivity(i);
-*/
+                    final AlertDialog.Builder AddNewQuery = new AlertDialog.Builder(context);
+                    View vw1 = inflater.inflate(R.layout.list_item_row, null);
+                    final AlertDialog dialog = AddNewQuery.create();
+                    dialog.setView(vw1);
+                    AddNewQuery.setView(vw1);
+                    dialog.show();
+
+
+                    final FloatingActionButton Next, Finish, Add;
+                    final EditText edittext, edittextkey;
+                    final TextView Query;
+                    final Animation fab_open, fab_close, rotate_forward, rotate_backward;
+                    final LinearLayout CardOptions;
+                    final RadioButton rb1, rb2, rb3, rb4;
+                    final RadioGroup rg;
+                    final String option;
+                    final TextInputLayout et, etk;
+
+                    fab_open = AnimationUtils.loadAnimation(context, R.anim.fab_open);
+                    fab_close = AnimationUtils.loadAnimation(context, R.anim.fab_close);
+                  //  rotate_forward = AnimationUtils.loadAnimation(context, R.anim.rotate_forward);
+                    //rotate_backward = AnimationUtils.loadAnimation(context, R.anim.rotate_backward);
+
+                    edittext = (EditText) vw1.findViewById(R.id.QueryMain);
+                    edittextkey = (EditText) vw1.findViewById(R.id.QueryKeywordMain);
+                    Next = (FloatingActionButton) vw1.findViewById(R.id.next);
+                    Add = (FloatingActionButton) vw1.findViewById(R.id.add);
+                    Finish = (FloatingActionButton) vw1.findViewById(R.id.finish);
+                    Query = (TextView) vw1.findViewById(R.id.query);
+                    CardOptions = (LinearLayout) vw1.findViewById(R.id.OptionContent);
+                    rg = (RadioGroup) vw1.findViewById(R.id.rg);
+                    rb1 = (RadioButton) vw1.findViewById(R.id.rb1);
+                    rb2 = (RadioButton) vw1.findViewById(R.id.rb2);
+                    rb3 = (RadioButton) vw1.findViewById(R.id.rb3);
+                    rb4 = (RadioButton) vw1.findViewById(R.id.rb4);
+                    et = (TextInputLayout) vw1.findViewById(R.id.et);
+                    etk = (TextInputLayout) vw1.findViewById(R.id.etk);
+
+
+                    edittext.setText(query.get(position).Query);
+                    edittextkey.setText(query.get(position).Keyword);
+                    option = query.get(position).Options;
+                    if (option.equals("1")) {
+                        rb1.setChecked(true);
+                        CardOptions.removeAllViews();
+                        LinearLayout.LayoutParams LayoutParams = new LinearLayout.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
+                        LinearLayout l1 = new LinearLayout(context);
+                        l1.setLayoutParams(LayoutParams);
+                        l1.setOrientation(LinearLayout.HORIZONTAL);
+                        l1.setGravity(Gravity.CENTER);
+
+                        Button yes = new Button(context);
+                        yes.setBackgroundColor(Color.GRAY);
+                        yes.setTextColor(Color.BLACK);
+                        yes.setText("Yes");
+                        LinearLayout.LayoutParams buttonLayoutParams = new LinearLayout.LayoutParams(LinearLayoutCompat.LayoutParams.WRAP_CONTENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
+                        buttonLayoutParams.setMargins(10, 10, 10, 10);
+                        yes.setLayoutParams(buttonLayoutParams);
+
+                        Button no = new Button(context);
+                        no.setBackgroundColor(Color.GRAY);
+                        no.setTextColor(Color.BLACK);
+                        no.setText("No");
+                        no.setLayoutParams(buttonLayoutParams);
+                        l1.addView(yes);
+                        l1.addView(no);
+                        CardOptions.addView(l1);
+                    } else if (option.equals("2")) {
+                        rb2.setChecked(true);
+                        CardOptions.removeAllViews();
+                        LinearLayout.LayoutParams LayoutParams = new LinearLayout.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
+                        LinearLayout l = new LinearLayout(context);
+                        l.setLayoutParams(LayoutParams);
+                        l.setOrientation(LinearLayout.VERTICAL);
+                        l.setGravity(Gravity.CENTER);
+                        l.setWeightSum(1);
+                        LinearLayout l1 = new LinearLayout(context);
+                        l1.setOrientation(LinearLayout.HORIZONTAL);
+                        l1.setGravity(Gravity.CENTER);
+                        l1.setLayoutParams(LayoutParams);
+                        LinearLayout.LayoutParams buttonLayoutParams = new LinearLayout.LayoutParams(LinearLayoutCompat.LayoutParams.WRAP_CONTENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
+                        buttonLayoutParams.setMargins(10, 10, 10, 10);
+                        Button bad = new Button(context);
+                        bad.setLayoutParams(buttonLayoutParams);
+                        bad.setBackgroundColor(Color.GRAY);
+                        bad.setTextColor(Color.BLACK);
+                        bad.setText("Bad");
+                        Button good = new Button(context);
+                        good.setLayoutParams(buttonLayoutParams);
+                        good.setBackgroundColor(Color.GRAY);
+                        good.setTextColor(Color.BLACK);
+                        good.setText("Good");
+                        l1.addView(bad);
+                        l1.addView(good);
+                        LinearLayout l2 = new LinearLayout(context);
+                        l2.setOrientation(LinearLayout.HORIZONTAL);
+                        l2.setGravity(Gravity.CENTER);
+                        l2.setLayoutParams(LayoutParams);
+                        Button vgood = new Button(context);
+                        vgood.setLayoutParams(buttonLayoutParams);
+                        vgood.setBackgroundColor(Color.GRAY);
+                        vgood.setTextColor(Color.BLACK);
+                        vgood.setText("Very Good");
+                        Button awesome = new Button(context);
+                        awesome.setLayoutParams(buttonLayoutParams);
+                        awesome.setBackgroundColor(Color.GRAY);
+                        awesome.setTextColor(Color.BLACK);
+                        awesome.setText("Awesome");
+                        l2.addView(vgood);
+                        l2.addView(awesome);
+                        l.addView(l1);
+                        l.addView(l2);
+                        CardOptions.addView(l);
+                    } else if (option.equals("3")) {
+                        rb3.setChecked(true);
+                        CardOptions.removeAllViews();
+                        LinearLayout l = new LinearLayout(context);
+                        l.setOrientation(LinearLayout.VERTICAL);
+                        l.setGravity(Gravity.CENTER_VERTICAL);
+                        SeekBar sb = new SeekBar(context);
+                        sb.setMax(10);
+                        l.addView(sb);
+                        CardOptions.addView(l);
+                    } else if (option.equals("4")) {
+                        rb4.setChecked(true);
+                        CardOptions.removeAllViews();
+                        LinearLayout l = new LinearLayout(context);
+                        l.setOrientation(LinearLayout.VERTICAL);
+                        l.setGravity(Gravity.CENTER_VERTICAL);
+                        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        l.addView(layoutInflater.inflate(R.layout.rating_bar, CardOptions, false));
+                        CardOptions.addView(l);
+                    }
+
+                    rb1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            CardOptions.removeAllViews();
+                            LinearLayout.LayoutParams LayoutParams = new LinearLayout.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
+                            LinearLayout l1 = new LinearLayout(context);
+                            l1.setLayoutParams(LayoutParams);
+                            l1.setOrientation(LinearLayout.HORIZONTAL);
+                            l1.setGravity(Gravity.CENTER);
+
+                            Button yes = new Button(context);
+                            yes.setBackgroundColor(Color.GRAY);
+                            yes.setTextColor(Color.BLACK);
+                            yes.setText("Yes");
+                            LinearLayout.LayoutParams buttonLayoutParams = new LinearLayout.LayoutParams(LinearLayoutCompat.LayoutParams.WRAP_CONTENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
+                            buttonLayoutParams.setMargins(10, 10, 10, 10);
+                            yes.setLayoutParams(buttonLayoutParams);
+
+                            Button no = new Button(context);
+                            no.setBackgroundColor(Color.GRAY);
+                            no.setTextColor(Color.BLACK);
+                            no.setText("No");
+                            no.setLayoutParams(buttonLayoutParams);
+                            l1.addView(yes);
+                            l1.addView(no);
+                            CardOptions.addView(l1);
+                        }
+                    });
+
+                    rb2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            CardOptions.removeAllViews();
+                            LinearLayout.LayoutParams LayoutParams = new LinearLayout.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
+                            LinearLayout l = new LinearLayout(context);
+                            l.setLayoutParams(LayoutParams);
+                            l.setOrientation(LinearLayout.VERTICAL);
+                            l.setGravity(Gravity.CENTER);
+                            l.setWeightSum(1);
+                            LinearLayout l1 = new LinearLayout(context);
+                            l1.setOrientation(LinearLayout.HORIZONTAL);
+                            l1.setGravity(Gravity.CENTER);
+                            l1.setLayoutParams(LayoutParams);
+                            LinearLayout.LayoutParams buttonLayoutParams = new LinearLayout.LayoutParams(LinearLayoutCompat.LayoutParams.WRAP_CONTENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
+                            buttonLayoutParams.setMargins(10, 10, 10, 10);
+                            Button bad = new Button(context);
+                            bad.setLayoutParams(buttonLayoutParams);
+                            bad.setBackgroundColor(Color.GRAY);
+                            bad.setTextColor(Color.BLACK);
+                            bad.setText("Bad");
+                            Button good = new Button(context);
+                            good.setLayoutParams(buttonLayoutParams);
+                            good.setBackgroundColor(Color.GRAY);
+                            good.setTextColor(Color.BLACK);
+                            good.setText("Good");
+                            l1.addView(bad);
+                            l1.addView(good);
+                            LinearLayout l2 = new LinearLayout(context);
+                            l2.setOrientation(LinearLayout.HORIZONTAL);
+                            l2.setGravity(Gravity.CENTER);
+                            l2.setLayoutParams(LayoutParams);
+                            Button vgood = new Button(context);
+                            vgood.setLayoutParams(buttonLayoutParams);
+                            vgood.setBackgroundColor(Color.GRAY);
+                            vgood.setTextColor(Color.BLACK);
+                            vgood.setText("Very Good");
+                            Button awesome = new Button(context);
+                            awesome.setLayoutParams(buttonLayoutParams);
+                            awesome.setBackgroundColor(Color.GRAY);
+                            awesome.setTextColor(Color.BLACK);
+                            awesome.setText("Awesome");
+                            l2.addView(vgood);
+                            l2.addView(awesome);
+                            l.addView(l1);
+                            l.addView(l2);
+                            CardOptions.addView(l);
+                        }
+                    });
+
+                    rb3.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            CardOptions.removeAllViews();
+                            LinearLayout l = new LinearLayout(context);
+                            l.setOrientation(LinearLayout.VERTICAL);
+                            l.setGravity(Gravity.CENTER_VERTICAL);
+                            SeekBar sb = new SeekBar(context);
+                            sb.setMax(10);
+                            l.addView(sb);
+                            CardOptions.addView(l);
+                        }
+                    });
+
+                    rb4.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            CardOptions.removeAllViews();
+                            LinearLayout l = new LinearLayout(context);
+                            l.setOrientation(LinearLayout.VERTICAL);
+                            l.setGravity(Gravity.CENTER_VERTICAL);
+                            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                            l.addView(layoutInflater.inflate(R.layout.rating_bar, CardOptions, false));
+                            CardOptions.addView(l);
+                        }
+                    });
+
+                    edittext.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            Query.setText(s.toString());
+                        }
+                    });
+
+
+                    Next.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            animateFAB();
+                        }
+
+                        Boolean isFabOpen = false;
+
+                        public void animateFAB() {
+
+                            if (isFabOpen) {
+
+                             //   Next.startAnimation(rotate_backward);
+                                Finish.startAnimation(fab_close);
+                                Add.startAnimation(fab_close);
+                                Finish.setClickable(false);
+                                Add.setClickable(false);
+                                isFabOpen = false;
+                                Log.d("Raj", "close");
+
+                            } else {
+
+                             //   Next.startAnimation(rotate_forward);
+                                Finish.startAnimation(fab_open);
+                                Add.startAnimation(fab_open);
+                                Finish.setClickable(true);
+                                Add.setClickable(true);
+                                isFabOpen = true;
+                                Log.d("Raj", "open");
+
+                            }
+                        }
+
+
+                    });
+                    Add.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String opt;
+                            opt = "null";
+                            switch (rg.getCheckedRadioButtonId()) {
+                                case R.id.rb1:
+                                    opt = "1";
+                                    break;
+                                case R.id.rb2:
+                                    opt = "2";
+                                    break;
+                                case R.id.rb3:
+                                    opt = "3";
+                                    break;
+                                case R.id.rb4:
+                                    opt = "4";
+                                    break;
+                            }
+                            if (edittext.getText().toString().equals("")) {
+                                et.setError("The field cannot left blank");
+                            } else if (edittextkey.getText().toString().equals("")) {
+                                etk.setError("The field cannot left blank");
+                            } else if (rb1.isChecked() || rb2.isChecked() || rb3.isChecked() || rb4.isChecked()) {
+                                Information i = new Information();
+                                i.Query = edittext.getText().toString();
+                                i.Keyword = edittextkey.getText().toString();
+                                i.Options = opt;
+                                query.set(position, i);
+                                sp = context.getSharedPreferences(PREFER_NAME, context.MODE_PRIVATE);
+                                sp1 = context.getSharedPreferences(REFERNCE, context.MODE_PRIVATE);
+                                CompanyName = sp.getString(KEY_COMPANYNAME, null);
+                                BranchName = sp1.getString(BRANCHNAME, null);
+                                qdb = new QueryDatabase(context);
+                                qsdb = qdb.getWritableDatabase();
+                                String qry = "Update " + CompanyName + "_" + BranchName + " set Query= '" + i.Query + "', QueryType= '" + i.Options + "', Keyword= '" + i.Keyword + "' where QueryNumber= 'Q" + (position + 1) + "'";
+                                qsdb.execSQL(qry);
+                                dialog.dismiss();
+                                adapter = new ViewEditAdapter1(context, Data.getData());
+                                Content.setAdapter(adapter);
+                            } else {
+                                Toast.makeText(context, "Please select the option", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+
+                    });
+
+
+                    Finish.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+
                 }
             });
 

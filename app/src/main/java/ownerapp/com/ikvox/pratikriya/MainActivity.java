@@ -2,12 +2,15 @@ package ownerapp.com.ikvox.pratikriya;
 
 import android.app.ActivityOptions;
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -18,7 +21,6 @@ import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -44,6 +46,8 @@ import android.widget.ToggleButton;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,8 +56,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 
 import ownerapp.com.ikvox.pratikriya.Database.MyDatabase;
+import ownerapp.com.ikvox.pratikriya.Database.QueryDatabase;
 import ownerapp.com.ikvox.pratikriya.LoginSessionManagement.UserSessionManager;
 import ownerapp.com.ikvox.pratikriya.RecyclerView.RecyclerViewAdapters.DrawerAdapter;
 import ownerapp.com.ikvox.pratikriya.RecyclerView.RecyclerViewClasses.DrawerItem;
@@ -91,35 +98,46 @@ public class MainActivity extends ActionBarActivity {
     Drawable drawablePicture, drawableCover;
     File file, folder;
     Boolean downloaded, error = false;
-    private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
-    String[] newsTitle, newsExcerpt, newsImage, newsContent, drawerArray;
+
     RecyclerView recyclerViewDrawer;
-    int postNumber = 99;
-    JSONObject jsonObjectNewsPosts;
-    JSONArray jsonArrayNewsContent;
-    SwipeRefreshLayout swipeRefreshLayout;
+
     RecyclerView.Adapter adapterDrawer;
-    private RecyclerView.LayoutManager layoutManagerDrawer;
-    private boolean mActionBarAutoHideEnabled = false;
-    private int mActionBarAutoHideSensivity = 0;
-    private int mActionBarAutoHideMinY = 0;
-    private int mActionBarAutoHideSignal = 0;
-    private boolean mActionBarShown = true;
-    public static SharedPreferences EditQuery;
-    public static String FILE_NAME = "editquery";
-    public static String KEY1 = "status";
-    String res;
+
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
     UserSessionManager session;
-    MyDatabase md;
+    MyDatabase db;
+    QueryDatabase qdb;
+    SQLiteDatabase sdb,qsdb;
     public static String[] drawerTitles = {"Home"};
     private Boolean exit = false;
     private static final String PREFER_NAME = "AndroidExamplePref";
     public static final String KEY_NAME = "name";
+    public static final String KEY_COMPANYNAME = "CompanyName";
     SharedPreferences sp;
     TextView UserNumber;
+
+    JSONParserIkVox jParser = new JSONParserIkVox();
+    JSONObject json,json1;
+    private static String url_login = "http://ikvoxserver.78kuyxr39b.us-west-2.elasticbeanstalk.com/CompanyBranchDetails.do";
+
+    JSONArray EmpNamejson,Designationjson,Departmentjson,locationjson,Emp_EmailIDjson,Phone_numberjson,Reporting_MailIDjson;
+    ArrayList<String> EmpName;
+    ArrayList<String> Designation;
+    ArrayList<String> Department;
+    ArrayList<String> location;
+    ArrayList<String> Emp_EmailID;
+    ArrayList<String> Phone_number;
+    ArrayList<String> Reporting_MailID;
+
+    private String resp;
+    private String errorMsg;
+    public static int size;
+
+    int len;
+    int error1,network;
+    static ProgressDialog mProgressDialog;
+    public static String CompanyName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,7 +153,7 @@ public class MainActivity extends ActionBarActivity {
         String number= sp.getString(KEY_NAME,null);
         UserNumber= (TextView)findViewById(R.id.textViewUsername);
         UserNumber.setText(number);
-        md = new MyDatabase(this);
+        //db = new MyDatabase(this);
 
         session = new UserSessionManager(getApplicationContext());
 
@@ -157,6 +175,17 @@ public class MainActivity extends ActionBarActivity {
         openQuery();
        // openReport();
         openCRM();
+        mProgressDialog = new ProgressDialog(MainActivity.this);
+        mProgressDialog.setIndeterminate(false);
+        mProgressDialog.setMessage("Syncing Data!! Please Wait...");
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        location=new ArrayList<String>() ;
+        Department=new ArrayList<String>() ;
+        EmpName =new ArrayList<String>() ;
+        Designation=new ArrayList<String>() ;
+        Phone_number=new ArrayList<String>() ;
+        Emp_EmailID=new ArrayList<String>() ;
+        Reporting_MailID=new ArrayList<String>() ;
     }
 
     private void openCRM() {
@@ -257,7 +286,8 @@ public class MainActivity extends ActionBarActivity {
             dialog.show();
             return true;
         }else if (id == R.id.action_Sync) {
-            startService(new Intent(getBaseContext(), GetEmployeeDetailsService.class));
+            //startService(new Intent(getBaseContext(), GetEmployeeDetailsService.class));
+            new MyTask().execute();
             return true;
         }
         else if (id == R.id.action_Logout) {
@@ -807,34 +837,197 @@ public class MainActivity extends ActionBarActivity {
                 fragmentTransaction.replace(R.id.content, fragmentDesign);
                 fragmentTransaction.commit();
                 break;
-            /*case 1:
-                sharedPreferences.edit().putInt("FRAGMENT", 1).apply();
-                fragmentManager = getSupportFragmentManager();
-                fragmentTransaction = fragmentManager.beginTransaction();
-                SQLiteDatabase db = md.getWritableDatabase();
-                String count = "SELECT count(*) FROM OwnerQuery";
-                Cursor mcursor = db.rawQuery(count, null);
-                mcursor.moveToFirst();
-                int icount = mcursor.getInt(0);
-                if (icount > 0) {
-                    drawerTitles[1] = "View Query";
-                    viewQuery addQuery = new viewQuery();
-                    fragmentTransaction.replace(R.id.content, addQuery);
-                    fragmentTransaction.commit();
-                    break;
-
-                }
-                //populate table
-                else {
-                    drawerTitles[1] = "Add Query";
-                    addEditQuery addQuery = new addEditQuery();
-                    fragmentTransaction.replace(R.id.content, addQuery);
-                    fragmentTransaction.commit();
-                    break;
-                }*/
-
 
         }
+    }
+
+    private class MyTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            // AndroidUtils.animateView(progressOverlay, image, animate, View.VISIBLE, 0.8f, 200);
+            mProgressDialog.show();
+            super.onPreExecute();
+        }
+
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                    /*JSONArray Employee_nameJson = new JSONArray(EmpName);
+                    try {
+                        json1.put("empName",Employee_nameJson);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }*/
+                    CompanyName = sp.getString(KEY_COMPANYNAME, null);
+
+
+                    ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+                    postParameters.add(new BasicNameValuePair("companyName", CompanyName));
+                    // postParameters.add(new BasicNameValuePair("password",json1.toString()));
+
+
+                    json = jParser.makeHttpRequest(url_login, "GET", postParameters);
+                    String s = null;
+                    try {
+
+
+                        s = json.getString("status");
+                        EmpNamejson = json.getJSONArray("Employee_name");
+                        Designationjson = json.getJSONArray("Designation");
+                        Departmentjson = json.getJSONArray("Department");
+                        locationjson = json.getJSONArray("location");
+                        Emp_EmailIDjson = json.getJSONArray("Emp_EmailID");
+                        Phone_numberjson = json.getJSONArray("Phone_number");
+                        Reporting_MailIDjson = json.getJSONArray("Reporting_MailID");
+
+                        len = EmpNamejson.length();
+                        resp = s;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        network = 1;
+                        errorMsg = e.getMessage();
+                    }
+                }
+            }).start();
+            try {
+                Thread.sleep(3000);
+                /**
+                 * Inside the new thread we cannot update the main thread So
+                 * updating the main thread outside the new thread
+                 */
+
+                if (resp.equals("success")) {
+
+                    try {
+                        //converting JSON value to Arraylist
+
+                        for (int i = 0; i < len; i++) {
+
+                            EmpName.add(EmpNamejson.get(i).toString());
+                            Designation.add(Designationjson.get(i).toString());
+                            Department.add(Departmentjson.get(i).toString());
+                            location.add(locationjson.get(i).toString());
+                            Emp_EmailID.add(Emp_EmailIDjson.get(i).toString());
+                            Phone_number.add(Phone_numberjson.get(i).toString());
+                            Reporting_MailID.add(Reporting_MailIDjson.get(i).toString());
+
+                        }
+                    } catch (JSONException e) {
+
+                    }
+                    // now we can fatch data from the arraylist using ex.  EmpName.get(2);   2 is the index value
+                    //Toast.makeText(getApplicationContext(), "PM" + EmpNamejson.get(3).toString(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), EmpName.get(3), Toast.LENGTH_SHORT).show();
+                    db = new MyDatabase(getApplicationContext());
+                    sdb = db.getWritableDatabase();
+                    sdb = getApplicationContext().openOrCreateDatabase(MyDatabase.DBNAME, MODE_PRIVATE, null);
+                    sdb.execSQL("CREATE TABLE IF NOT EXISTS "
+                            + CompanyName
+                            + " (Branch TEXT, Department TEXT,Employee TEXT, Designation TEXT,Phone TEXT, Email TEXT, Report TEXT);");
+                    String[] branch = new String[location.size()];
+                    for (int i = 0; i < location.size(); i++)
+                        branch[i] = location.get(i).toString().trim();
+                    branch = new HashSet<String>(Arrays.asList(branch)).toArray(new String[0]);
+                    for (int i = 0; i < branch.length; i++) {
+                        branch[i] = branch[i].valueOf(branch[i].charAt(0)).toUpperCase() + branch[i].substring(1, branch[i].length());
+                    }
+
+                    qdb = new QueryDatabase(getApplicationContext());
+                    qsdb = qdb.getWritableDatabase();
+                    qsdb = getApplicationContext().openOrCreateDatabase(QueryDatabase.DBNAME, MODE_PRIVATE, null);
+                    for (int i = 0; i < branch.length; i++) {
+                        qsdb.execSQL("create table IF NOT EXISTS " + CompanyName + "_" + branch[i] + " (QueryNumber TEXT, Query TEXT,QueryType TEXT, Keyword TEXT);");
+                    }
+                    sdb.execSQL("Delete from " + CompanyName);
+                    int i;
+                    for (i = 0; i < location.size(); i++) {
+                        ContentValues value = new ContentValues();
+                        value.put("Branch", location.get(i).toString().toLowerCase());
+                        value.put("Department", Department.get(i).toString().toLowerCase());
+                        value.put("Employee", EmpName.get(i).toString().toLowerCase());
+                        value.put("Designation", Designation.get(i).toString().toLowerCase());
+                        value.put("Phone", Phone_number.get(i).toString().toLowerCase());
+                        value.put("Email", Emp_EmailID.get(i).toString().toLowerCase());
+                        value.put("Report", Reporting_MailID.get(i).toString().toLowerCase());
+                        sdb.insert(CompanyName, null, value);
+                    }
+                }
+
+
+
+
+                    /*String count = "SELECT count(*) FROM "+CompanyName;
+                    Cursor mcursor = sdb.rawQuery(count, null);
+                    mcursor.moveToFirst();
+                    int icount = mcursor.getInt(0);
+                    if(icount>0) {
+                        sdb.execSQL("Delete from "+CompanyName);
+                        int i;
+                        for (i = 0; i < location.size(); i++) {
+                            ContentValues value = new ContentValues();
+                            value.put("Branch", location.get(i).toString().toLowerCase());
+                            value.put("Department", Department.get(i).toString().toLowerCase());
+                            value.put("Employee", EmpName.get(i).toString().toLowerCase());
+                            value.put("Designation", Designation.get(i).toString().toLowerCase());
+                            value.put("Phone", Phone_number.get(i).toString().toLowerCase());
+                            value.put("Email", Emp_EmailID.get(i).toString().toLowerCase());
+                            value.put("Report", Reporting_MailID.get(i).toString().toLowerCase());
+                            sdb.insert(CompanyName,null, value);
+                        }
+                    }
+                    else
+                    {
+                        int i;
+                        for (i = 0; i < location.size(); i++) {
+                            ContentValues value = new ContentValues();
+                            value.put("Branch", location.get(i).toString().toLowerCase());
+                            value.put("Department", Department.get(i).toString().toLowerCase());
+                            value.put("Employee", EmpName.get(i).toString().toLowerCase());
+                            value.put("Designation", Designation.get(i).toString().toLowerCase());
+                            value.put("Phone", Phone_number.get(i).toString().toLowerCase());
+                            value.put("Email", Emp_EmailID.get(i).toString().toLowerCase());
+                            value.put("Report", Reporting_MailID.get(i).toString().toLowerCase());
+                            sdb.insert(CompanyName,null, value);
+                        }
+                    }
+                } else */if (resp.equals("Failed")) {
+                    error1 = 1;
+                }
+
+
+                if (null != errorMsg && !errorMsg.isEmpty()) {
+
+                }
+            } catch (Exception e) {
+
+
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            mProgressDialog.dismiss();
+            resp = "null";
+            // Log.d("k", EmpNamejson.toString());
+
+            if (error1 == 1) {
+
+                Toast.makeText(getApplicationContext(), "Wrong User Name or Password", Toast.LENGTH_SHORT).show();
+                error1 = 0;
+                network = 0;
+            } else if (network == 1) {
+
+                error1 = 0;
+                network = 0;
+            }
+            super.onPostExecute(aVoid);
+        }
+
     }
 
 }

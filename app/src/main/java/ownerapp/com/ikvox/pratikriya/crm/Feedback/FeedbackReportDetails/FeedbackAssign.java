@@ -107,8 +107,8 @@ public class FeedbackAssign extends ActionBarActivity {
         toolbar.setBackgroundColor(MainActivity.color);
         sp = getSharedPreferences(PREFER_NAME, MODE_PRIVATE);
         CompanyName = sp.getString(KEY_COMPANYNAME, null);
-        ClickAssign= (TextView)findViewById(R.id.clickAssign);
-        ClickAssign.setVisibility(View.INVISIBLE);
+       // ClickAssign= (TextView)findViewById(R.id.clickAssign);
+        //ClickAssign.setVisibility(View.INVISIBLE);
 
         sp1 = getSharedPreferences(REFERNCE, MODE_PRIVATE);
         BranchName = sp1.getString(BRANCHNAME, null);
@@ -156,7 +156,7 @@ public class FeedbackAssign extends ActionBarActivity {
                 empAdapter = new AssignAdapter(FeedbackAssign.this, Employee_list.getData());
                 Employee.setAdapter(empAdapter);
                 Employee.setLayoutManager(new LinearLayoutManager(FeedbackAssign.this));
-                if(Query.equals("")){
+                /*if(Query.equals("")){
 
                     Assign.setEnabled(false);
                     ClickAssign.setVisibility(View.INVISIBLE);
@@ -167,7 +167,7 @@ public class FeedbackAssign extends ActionBarActivity {
                     Assign.setEnabled(true);
                     ClickAssign.setVisibility(View.VISIBLE);
 
-                }
+                }*/
                 //need some changes in below to select more query and also it should be in dynamic
 
                 if  (selectedFromList.equals("Q1")) {

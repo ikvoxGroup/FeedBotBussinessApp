@@ -215,13 +215,14 @@ public class GetEmployeeDetailsService extends Service {
                         qsdb.execSQL( "create table "+   CompanyName+"_"+branch[i] + " (QueryNumber TEXT, Query TEXT,QueryType TEXT, Keyword TEXT);");
                     }
 
+
+
                     String count = "SELECT count(*) FROM "+CompanyName;
                     Cursor mcursor = sdb.rawQuery(count, null);
                     mcursor.moveToFirst();
                     int icount = mcursor.getInt(0);
                     if(icount>0) {
-                        String delete = "delete from "+CompanyName;
-                        sdb.execSQL(delete);
+                        sdb.execSQL("Delete from "+CompanyName);
                         int i;
                         for (i = 0; i < location.size(); i++) {
                             ContentValues value = new ContentValues();

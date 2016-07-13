@@ -110,13 +110,13 @@
                         android:layout_margin="10dp"
                         android:text="Total No. of Negative Feedback: "/>
 
-                    <TextView
+                    <!--<TextView
                         android:layout_width="match_parent"
                         android:id="@+id/clickAssign"
                         android:layout_height="wrap_content"
-                        android:text="--Click Here to Assign--"
+                        android:text="&#45;&#45;Click Here to Assign&#45;&#45;"
                         android:textColor="#000"
-                        android:textAlignment="center"/>
+                        android:textAlignment="center"/>-->
                 </LinearLayout>
 
                 <LinearLayout
