@@ -119,7 +119,7 @@ public class MainActivity extends ActionBarActivity {
 
     JSONParserIkVox jParser = new JSONParserIkVox();
     JSONObject json,json1;
-    private static String url_login = "http://ikvoxserver.78kuyxr39b.us-west-2.elasticbeanstalk.com/CompanyBranchDetails.do";
+    private static String url_login = "http://feedbotappserver.cgihum6dcd.us-west-2.elasticbeanstalk.com/CompanyBranchDetails.do";
 
     JSONArray EmpNamejson,Designationjson,Departmentjson,locationjson,Emp_EmailIDjson,Phone_numberjson,Reporting_MailIDjson;
     ArrayList<String> EmpName;

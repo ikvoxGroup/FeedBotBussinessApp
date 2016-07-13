@@ -92,8 +92,8 @@ public class Query_main extends AppCompatActivity {
 
     JSONParserIkVox jParser = new JSONParserIkVox();
     JSONObject json;
-    private static String url_query = "http://ikvoxserver.78kuyxr39b.us-west-2.elasticbeanstalk.com/RetriveQueryForTablet.do";
-    private static String url_add = "http://ikvoxserver.78kuyxr39b.us-west-2.elasticbeanstalk.com/AddQuery.do";
+    private static String url_query = "http://feedbotappserver.cgihum6dcd.us-west-2.elasticbeanstalk.com/RetriveQueryForTablet.do";
+    private static String url_add = "http://feedbotappserver.cgihum6dcd.us-west-2.elasticbeanstalk.com/AddQuery.do";
 
     private String resp;
     private String errorMsg;

@@ -182,7 +182,7 @@ public class SignupActivity extends Activity {
                     try {
                         response = SimpleHttpClient
                                 .executeHttpPost(
-                                        "http://ikvoxserver.78kuyxr39b.us-west-2.elasticbeanstalk.com/SignUp.do",
+                                        "http://feedbotappserver.cgihum6dcd.us-west-2.elasticbeanstalk.com/SignUp.do",
                                         postParameters);
 
                         String res = response.toString();

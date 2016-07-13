@@ -2,12 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center"
     android:background="#000000">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Change Status"
         android:textSize="20sp"
+        android:layout_gravity="center"
         android:gravity="center"
         android:textStyle="bold"
         android:textColor="#fff"
@@ -23,33 +25,37 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Open"
+            android:buttonTint="#fff"
             android:textSize="12sp"
             android:layout_margin="5dp"
-            android:layout_weight="1"
+            android:layout_weight=".25"
             android:id="@+id/rbopen"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Assigned"
+            android:buttonTint="#fff"
             android:textSize="12sp"
             android:layout_margin="5dp"
-            android:layout_weight="1"
+            android:layout_weight=".25"
             android:id="@+id/rbassigned"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Progress"
             android:textSize="12sp"
+            android:buttonTint="#fff"
             android:layout_margin="5dp"
-            android:layout_weight="1"
+            android:layout_weight=".25"
             android:id="@+id/rbprogress"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Closed"
             android:textSize="12sp"
+            android:buttonTint="#fff"
             android:layout_margin="5dp"
-            android:layout_weight="1"
+            android:layout_weight=".25"
             android:id="@+id/rbclose"/>
     </RadioGroup>
     <Button

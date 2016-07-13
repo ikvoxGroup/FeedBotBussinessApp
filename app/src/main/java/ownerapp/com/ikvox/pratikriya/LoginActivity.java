@@ -1,12 +1,9 @@
 package ownerapp.com.ikvox.pratikriya;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,12 +12,9 @@ import android.graphics.drawable.AnimationDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
@@ -30,19 +24,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import ownerapp.com.ikvox.pratikriya.Database.MyDatabase;
 import ownerapp.com.ikvox.pratikriya.LoginSessionManagement.UserSessionManager;
 import ownerapp.com.ikvox.pratikriya.ProgBarAppear.AndroidUtils;
-import ownerapp.com.ikvox.pratikriya.gcmNotification.Config;
 
 
 /**
@@ -68,7 +58,7 @@ public class LoginActivity extends ActionBarActivity {
 
     JSONParserIkVox jParser = new JSONParserIkVox();
     JSONObject json;
-    private static String url_login = "http://ikvoxserver.78kuyxr39b.us-west-2.elasticbeanstalk.com/login.do";
+    private static String url_login = "http://feedbotappserver.cgihum6dcd.us-west-2.elasticbeanstalk.com/login.do";
 
     public static String email=null;
     public  static String companyName=null;
@@ -86,7 +76,7 @@ public class LoginActivity extends ActionBarActivity {
     public static final String KEY_NAME = "name";
     SharedPreferences sp;
 
-    public static final String REG_ID = "regId";
+    /*public static final String REG_ID = "regId";
     private static final String APP_VERSION = "appVersion";
 
     static final String TAG = "Register Activity";
@@ -94,7 +84,7 @@ public class LoginActivity extends ActionBarActivity {
 
     GoogleCloudMessaging gcm;
     Context context;
-    String regId,mobile;
+    String regId,mobile;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -298,8 +288,15 @@ public class LoginActivity extends ActionBarActivity {
                         value.put("EmailId", email);
                         value.put("Company", companyName);
                         sdb.insert("Login", null, value);
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                       // intent.putExtra("regId", regId);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        // Add new Flag to start new Activity
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
 
-                        if (TextUtils.isEmpty(regId)) {
+                        /*if (TextUtils.isEmpty(regId)) {
                             regId = registerGCM();
                             Log.d("RegisterActivity", "GCM RegId: " + regId);
 
@@ -313,9 +310,9 @@ public class LoginActivity extends ActionBarActivity {
                             finish();
 
                         } else {
-               /* Toast.makeText(getApplicationContext(),
+               *//* Toast.makeText(getApplicationContext(),
                         "Already Registered with GCM Server!",
-                        Toast.LENGTH_LONG).show();*/
+                        Toast.LENGTH_LONG).show();*//*
                             regId = registerGCM();
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             intent.putExtra("regId", regId);
@@ -325,7 +322,7 @@ public class LoginActivity extends ActionBarActivity {
                             startActivity(intent);
                             finish();
 
-                        }
+                        }*/
 
                     } else {
                         ContentValues value = new ContentValues();
@@ -335,7 +332,14 @@ public class LoginActivity extends ActionBarActivity {
                         value.put("EmailId", email);
                         value.put("Company", companyName);
                         sdb.insert("Login", null, value);
-                        if (TextUtils.isEmpty(regId)) {
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                      //  intent.putExtra("regId", regId);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        // Add new Flag to start new Activity
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
+                       /* if (TextUtils.isEmpty(regId)) {
                             regId = registerGCM();
                             Log.d("RegisterActivity", "GCM RegId: " + regId);
 
@@ -349,9 +353,9 @@ public class LoginActivity extends ActionBarActivity {
                             finish();
 
                         } else {
-               /* Toast.makeText(getApplicationContext(),
+               *//* Toast.makeText(getApplicationContext(),
                         "Already Registered with GCM Server!",
-                        Toast.LENGTH_LONG).show();*/
+                        Toast.LENGTH_LONG).show();*//*
                             regId = registerGCM();
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             intent.putExtra("regId", regId);
@@ -361,7 +365,7 @@ public class LoginActivity extends ActionBarActivity {
                             startActivity(intent);
                             finish();
 
-                        }
+                        }*/
                     }
                 } else if (resp.equals("Failed")) {
                     error = 1;
@@ -422,7 +426,7 @@ public class LoginActivity extends ActionBarActivity {
 
     }
 
-    public String registerGCM() {
+    /*public String registerGCM() {
 
         gcm = GoogleCloudMessaging.getInstance(this);
         regId = getRegistrationId(context);
@@ -435,13 +439,13 @@ public class LoginActivity extends ActionBarActivity {
                     "registerGCM - successfully registered with GCM server - regId: "
                             + regId);
         } else {
-           /* Toast.makeText(getApplicationContext(),
+           *//* Toast.makeText(getApplicationContext(),
                     "RegId already available. RegId: " + regId,
-                    Toast.LENGTH_LONG).show();*/
+                    Toast.LENGTH_LONG).show();*//*
         }
         return regId;
-    }
-    private String getRegistrationId(Context context) {
+    }*/
+    /*private String getRegistrationId(Context context) {
         final SharedPreferences prefs = getSharedPreferences(
                 MainActivity.class.getSimpleName(), Context.MODE_PRIVATE);
         String registrationId = prefs.getString(REG_ID, "");
@@ -493,9 +497,9 @@ public class LoginActivity extends ActionBarActivity {
 
             @Override
             protected void onPostExecute(String msg) {
-                /*Toast.makeText(getApplicationContext(),
+                *//*Toast.makeText(getApplicationContext(),
                         "Registered with GCM Server." + msg, Toast.LENGTH_LONG)
-                        .show();*/
+                        .show();*//*
             }
         }.execute(null, null, null);
     }
@@ -508,7 +512,7 @@ public class LoginActivity extends ActionBarActivity {
         editor.putString(REG_ID, regId);
         editor.putInt(APP_VERSION, appVersion);
         editor.commit();
-    }
+    }*/
 
 
 

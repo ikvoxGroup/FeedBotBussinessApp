@@ -88,7 +88,7 @@ public class FeedbackAssign extends ActionBarActivity {
 
     JSONParserIkVox jParser = new JSONParserIkVox();
     JSONObject json;
-    private static String url_login = "http://ikvoxserver.78kuyxr39b.us-west-2.elasticbeanstalk.com/setStatus.do";
+    private static String url_login = "http://feedbotappserver.cgihum6dcd.us-west-2.elasticbeanstalk.com/setStatus.do";
     private String resp;
     private String errorMsg;
 
@@ -143,6 +143,7 @@ public class FeedbackAssign extends ActionBarActivity {
         final ListView lv = (ListView)findViewById(R.id.listQuery);
 
 
+        assert lv != null;
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -504,7 +505,7 @@ public class FeedbackAssign extends ActionBarActivity {
                     //Fname=null;
                     //Lname=null;
                     String mail=null;
-                    Assignee=null;
+                   // Assignee=null;
                     qsdb = qdb.getWritableDatabase();
                     String qry = "Select Query from " + CompanyName + "_" + FBName + " where QueryNumber= '" + selectedFromList + "'";
                     Cursor cursor = qsdb.rawQuery(qry, null);
@@ -519,17 +520,16 @@ public class FeedbackAssign extends ActionBarActivity {
                     if (cursor1.moveToFirst()) {
                         do {
                             Fname = cursor1.getString(0);
-                            Lname= cursor1.getString(1);
-                            mail=cursor1.getString(2);
+                            Lname = cursor1.getString(1);
+                            mail = cursor1.getString(2);
                         } while (cursor1.moveToNext());
                     }
-
+                            Assignee=EmployeeName.getText().toString();
                     try {
                     GMailSender send = new GMailSender("noreply.ikvox@gmail.com",
                             "ikvox@1234");
                         GMailSender send1 = new GMailSender("noreply.ikvox@gmail.com",
                                 "ikvox@1234");
-                        Assignee=EmployeeName.getText().toString();
                     String BodyOwner = Assignee + " has been assigned to look after the Query( " + Query + " ) ";
                     String subject = "Query Assigned";
                     String BodyAssignee = Fname+" "+Lname+ " has assigned you to look after the Query ( " + Query + " ) ASAP.";
@@ -543,25 +543,26 @@ public class FeedbackAssign extends ActionBarActivity {
                     }
 
 
-                    sdb= getApplicationContext().openOrCreateDatabase(MyDatabase.DBNAME,MODE_PRIVATE,null);
-                    sdb.execSQL("CREATE TABLE IF NOT EXISTS "
-                            + "Status"
-                            + " (Query TEXT, Status TEXT);");
-                    ContentValues value = new ContentValues();
-                    value.put("Query", Query);
-                    value.put("Status", "O");
-                    sdb.insert("Status",null, value);
+                            sdb= getApplicationContext().openOrCreateDatabase(QueryDatabase.DBNAME,MODE_PRIVATE,null);
+                            sdb.execSQL("CREATE TABLE IF NOT EXISTS "
+                                    + CompanyName+"_"+FBName+"_"+"Status"
+                                    + " (QueryNumber TEXT,Query TEXT, Status TEXT,AssignedTo TEXT);");
+                            ContentValues value = new ContentValues();
+                            value.put("QueryNumber", selectedFromList);
+                            value.put("Query", Query);
+                            value.put("Status", "Assign");
+                            value.put("AssignedTo", Assignee);
+                            sdb.insert(CompanyName+"_"+FBName+"_"+"Status",null, value);
                         }
                     }).start();
                     tick.setVisibility(View.VISIBLE);
                     Log.i("kush",Fname+" "+Lname+" "+Assignee+" ");
-                    Toast.makeText(getApplicationContext(), "Query Assigned to "+Assignee, Toast.LENGTH_SHORT).show();
+                    //  Toast.makeText(getApplicationContext(), "Query Assigned to "+Assignee, Toast.LENGTH_SHORT).show();
                     Toast.makeText(getApplicationContext(), "Mail has been sent", Toast.LENGTH_SHORT).show();
 
 
                     //store crm status details
                     new MyTask().execute();
-
 
 
 

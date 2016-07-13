@@ -53,7 +53,7 @@ public class FeedbackbranchDetails extends ActionBarActivity {
 
     JSONParserIkVox jParser = new JSONParserIkVox();
     JSONObject json;
-    private static String url_getQuery ="http://ikvoxserver.78kuyxr39b.us-west-2.elasticbeanstalk.com/GetResults.do";
+    private static String url_getQuery ="http://feedbotappserver.cgihum6dcd.us-west-2.elasticbeanstalk.com/GetResults.do";
     private static final String PREFER_NAME = "AndroidExamplePref";
     public static final String KEY_NAME = "name";
 
