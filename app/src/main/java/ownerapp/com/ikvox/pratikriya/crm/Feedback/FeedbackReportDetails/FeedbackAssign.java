@@ -542,17 +542,6 @@ public class FeedbackAssign extends ActionBarActivity {
                         Log.d("Error Sending email", e1.toString());
                     }
 
-
-                            sdb= getApplicationContext().openOrCreateDatabase(QueryDatabase.DBNAME,MODE_PRIVATE,null);
-                            sdb.execSQL("CREATE TABLE IF NOT EXISTS "
-                                    + CompanyName+"_"+FBName+"_"+"Status"
-                                    + " (QueryNumber TEXT,Query TEXT, Status TEXT,AssignedTo TEXT);");
-                            ContentValues value = new ContentValues();
-                            value.put("QueryNumber", selectedFromList);
-                            value.put("Query", Query);
-                            value.put("Status", "Assign");
-                            value.put("AssignedTo", Assignee);
-                            sdb.insert(CompanyName+"_"+FBName+"_"+"Status",null, value);
                         }
                     }).start();
                     tick.setVisibility(View.VISIBLE);
@@ -634,6 +623,21 @@ public class FeedbackAssign extends ActionBarActivity {
             }).start();
             try {
                 Thread.sleep(5000);
+                if (resp.equals("success"))
+                {
+                    sdb= getApplicationContext().openOrCreateDatabase(QueryDatabase.DBNAME,MODE_PRIVATE,null);
+                    sdb.execSQL("CREATE TABLE IF NOT EXISTS "
+                            + CompanyName+"_"+FBName+"_"+"Status"
+                            + " (QueryNumber TEXT,AssignedBy TEXT ,AssignedTo TEXT,Status TEXT);");
+                    ContentValues value = new ContentValues();
+                    value.put("QueryNumber", selectedFromList);
+                    value.put("AssignedBy", Fname+" "+Lname );
+                    value.put("AssignedTo", Assignee);
+                    value.put("Status", "Assign");
+
+                    sdb.insert(CompanyName+"_"+FBName+"_"+"Status",null, value);
+                }
+
                 /**
                  * Inside the new thread we cannot update the main thread So
                  * updating the main thread outside the new thread
