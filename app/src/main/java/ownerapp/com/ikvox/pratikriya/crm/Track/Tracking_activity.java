@@ -78,7 +78,7 @@ public class Tracking_activity extends Fragment {
     private static String url_setStatus = "http://feedbotappserver.cgihum6dcd.us-west-2.elasticbeanstalk.com/setStatus.do";
     private static String url_getStatus = "http://feedbotappserver.cgihum6dcd.us-west-2.elasticbeanstalk.com/getStatus.do";
 
-    private String respS;
+    private static String respS="failed";
     private String errorMsg;
 
     public static JSONArray QuerySrNumberjson = null;
@@ -94,6 +94,11 @@ public class Tracking_activity extends Fragment {
     static ProgressDialog mProgressDialog;
 
     public static ArrayList<inf> query;
+
+    public static String AssignedTo;
+    public static String AssignedBy;
+    public static String Pos;
+
 
     public Tracking_activity() {
         // Required empty public constructor
@@ -129,7 +134,10 @@ public class Tracking_activity extends Fragment {
         mylist = (ExpandableListView) rootView.findViewById(R.id.QueriesExpanded);
         final TextView Branch = (TextView) rootView.findViewById(R.id.selectBranchTracking);
         noti = (ImageView) rootView.findViewById(R.id.notiTrack);
-
+        QuerySrNumber=new ArrayList<>();
+        QueryAssignedBy=new ArrayList<>();
+        QueryAssignedTo=new ArrayList<>();
+        QueryStatus=new ArrayList<>();
         OpenBranch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -157,11 +165,29 @@ public class Tracking_activity extends Fragment {
                 mylist.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
                     @Override
                     public void onGroupExpand(int groupPosition) {
+
                         if (lastExpandedPosition != -1
                                 && groupPosition != lastExpandedPosition) {
                             mylist.collapseGroup(lastExpandedPosition);
                         }
                         lastExpandedPosition = groupPosition;
+                        String qry= "select AssignedBy, AssignedTo, Status from "+CompanyName+"_"+selectedFromList+"_"+"Status "+"where QueryNumber = 'Q"+(groupPosition+1)+"'";
+                        qsdb=qdb.getWritableDatabase();
+                        try {
+                            Cursor c = qsdb.rawQuery(qry, null);
+                            if (c.moveToFirst()) {
+                                do {
+                                    AssignedBy=c.getString(0);
+                                    AssignedTo=c.getString(1);
+                                    Pos=c.getString(2);
+                                } while (c.moveToNext());
+                            }
+                        }catch (Exception e)
+                        {
+                            AssignedBy="Action Not Taken";
+                            AssignedTo="Action not Taken";
+                            Pos="open";
+                        }
                     }
                 });
                     /*expandAll();
@@ -317,11 +343,10 @@ public class Tracking_activity extends Fragment {
             convertView = infalInflater.inflate(R.layout.status, null);
         }*/
             TextView keyword = (TextView) v.findViewById(R.id.QueryKeyword);
-            TextView assigned = (TextView) v.findViewById(R.id.QueryAssigned);
+            TextView assignedBy = (TextView) v.findViewById(R.id.QueryAssigned);
             LinearLayout ChangeStatus = (LinearLayout) v.findViewById(R.id.changeStatus);
             final TextView assignedTo = (TextView) v.findViewById(R.id.QueryAssignedBy);
             final TextView pos= (TextView) v.findViewById(R.id.pos);
-            String p=null;
             final ImageView l1 = (ImageView) v.findViewById(R.id.status1);
             final ImageView l2 = (ImageView) v.findViewById(R.id.status2);
             final ImageView l3 = (ImageView) v.findViewById(R.id.status3);
@@ -329,26 +354,13 @@ public class Tracking_activity extends Fragment {
             final ImageView logo2 = (ImageView) v.findViewById(R.id.progressLogo);
             final ImageView logo3 = (ImageView) v.findViewById(R.id.closedLogo);
             keyword.setText("Query Number: " + query.get(groupPosition).QueryNumber);
-            String qry= "select AssignedBy, AssignedTo, Status from "+CompanyName+"_"+selectedFromList+"_"+"Status "+"where QueryNumber = '"+keyword.getText().toString()+"'";
-            qsdb=qdb.getWritableDatabase();
-            try {
-                Cursor c = qsdb.rawQuery(qry, null);
-                if (c.moveToFirst()) {
-                    do {
-                        assigned.setText(c.getString(0));
-                        assignedTo.setText(c.getString(1));
-                        pos.setText(c.getString(2));
-                    } while (c.moveToNext());
-                }
-            }catch (Exception e)
-            {
-                assigned.setText("Action Not Taken");
-                assignedTo.setText("Action not Taken");
-                pos.setText("open");
-            }
-            assigned.setText("Assigned By: "+assigned.getText().toString());
+
+           // assigned.setText("Assigned to: "+assigned.getText().toString());
             // pos.setText(query.get(groupPosition).QueryStatus);
            // pos.setText("open");
+            assignedBy.setText("Assigned By: "+AssignedBy);
+            assignedTo.setText("Assigned To: "+AssignedTo);
+            pos.setText("Status: "+Pos);
             if (pos.getText().toString().equals("close")) {
                 logo1.setImageResource(R.drawable.assigned);
                 logo2.setImageResource(R.drawable.progress);
@@ -372,12 +384,6 @@ public class Tracking_activity extends Fragment {
                     View vw1 = v.inflate(context, R.layout.change_status, null);
                     final AlertDialog dialog = ChangeStatus.create();
                     Button submit = (Button) vw1.findViewById(R.id.submitStatus);
-                    submit.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                        }
-                    });
                     dialog.setView(vw1);
                     ChangeStatus.setView(vw1);
                     dialog.show();
@@ -573,7 +579,7 @@ public class Tracking_activity extends Fragment {
         @Override
         protected void onPreExecute() {
             //AndroidUtils.animateView(progressOverlay, image, animate, View.VISIBLE, 0.8f, 200);
-//            mProgressDialog.show();
+            mProgressDialog.show();
 
             super.onPreExecute();
         }
@@ -672,8 +678,8 @@ public class Tracking_activity extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
            // AndroidUtils.animateView(progressOverlay, image, animate, View.GONE, 0, 200);
-     //       mProgressDialog.dismiss();
-           // respS = "null";
+            mProgressDialog.dismiss();
+            respS = "null";
             /*if (error == 1) {
 
                 // Toast.makeText(LoginActivity.this, "Wrong User Name or Password", Toast.LENGTH_SHORT).show();
