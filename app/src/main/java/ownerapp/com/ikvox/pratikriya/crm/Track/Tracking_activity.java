@@ -31,10 +31,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -77,13 +77,16 @@ public class Tracking_activity extends Fragment {
     JSONObject json;
     private static String url_setStatus = "http://feedbotappserver.cgihum6dcd.us-west-2.elasticbeanstalk.com/setStatus.do";
     private static String url_getStatus = "http://feedbotappserver.cgihum6dcd.us-west-2.elasticbeanstalk.com/getStatus.do";
-    public String resp;
+
+    private String respS;
     private String errorMsg;
 
-    public static String QuerySrNumberjson = null;
-    public static String QueryAssignedByjson = null;
-    public static String QueryAssignedTojson = null;
-    public static String QueryStatusjson = null;
+    public static JSONArray QuerySrNumberjson = null;
+    public static JSONArray QueryAssignedByjson = null;
+    public static JSONArray QueryAssignedTojson = null;
+    public static JSONArray QueryStatusjson = null;
+
+    int len;
     public static ArrayList<String> QuerySrNumber;
     public static ArrayList<String> QueryAssignedBy;
     public static ArrayList<String> QueryAssignedTo;
@@ -566,10 +569,12 @@ public class Tracking_activity extends Fragment {
     }
 
     private class MyTask extends AsyncTask<Void, Void, Void> {
+
         @Override
         protected void onPreExecute() {
             //AndroidUtils.animateView(progressOverlay, image, animate, View.VISIBLE, 0.8f, 200);
 //            mProgressDialog.show();
+
             super.onPreExecute();
         }
 
@@ -586,7 +591,7 @@ public class Tracking_activity extends Fragment {
                     postParameters.add(new BasicNameValuePair("BranchLocation", selectedFromList));
                     // postParameters.add(new BasicNameValuePair("QueryNumber",));
                     json = jParser.makeHttpRequest(url_getStatus, "GET", postParameters);
-                    String s ;
+                    String s=null ;
                     try {
                         /*response = SimpleHttpClient
                                 .executeHttpPost(
@@ -594,11 +599,14 @@ public class Tracking_activity extends Fragment {
                                         postParameters);*/
 
                         s = json.getString("status");
-                        QuerySrNumberjson = json.getString("querySrno");
-                        QueryAssignedByjson = json.getString("assignedBy");
-                        QueryAssignedTojson = json.getString("assignee");
-                        QueryStatusjson = json.getString("crmstatus");
-                        resp = s;
+                        respS = s;
+                        QuerySrNumberjson = json.getJSONArray("querySrno");
+                        QueryAssignedByjson = json.getJSONArray("assignedBy");
+                        QueryAssignedTojson = json.getJSONArray("assignee");
+                        QueryStatusjson = json.getJSONArray("crmstatus");
+
+                        len=QuerySrNumberjson.length();
+
                     } catch (Exception e) {
                         e.printStackTrace();
                         //   network=1;
@@ -608,8 +616,8 @@ public class Tracking_activity extends Fragment {
             }).start();
             try {
                 Thread.sleep(3000);
-                if (resp.equals("success")) {
-                    try {
+                if (respS.equals("success")) {
+                   /* try {
                         //converting JSON value to Arraylist
                         // int len = QuerySrNumberListjson.length();
                         Gson gson = new Gson();
@@ -619,7 +627,20 @@ public class Tracking_activity extends Fragment {
                         QueryStatus = gson.fromJson(QueryStatusjson, ArrayList.class);
                     } catch (Exception e) {
                         Log.e("Kushal1", e.toString());
+                    }*/
+                    try{
+                        for (int i = 0; i < len; i++) {
+
+                            QuerySrNumber.add(QuerySrNumberjson.get(i).toString());
+                            QueryAssignedBy.add(QueryAssignedByjson.get(i).toString());
+                            QueryAssignedTo.add(QueryAssignedTojson.get(i).toString());
+                            QueryStatus.add(QueryStatusjson.get(i).toString());
+                        }
+                    }catch(JSONException e){
+
                     }
+
+
                     qsdb = getContext().openOrCreateDatabase(QueryDatabase.DBNAME, getContext().MODE_PRIVATE, null);
                     qsdb.execSQL("CREATE TABLE IF NOT EXISTS "
                             + CompanyName + "_" + selectedFromList + "_" + "Status"
@@ -636,7 +657,7 @@ public class Tracking_activity extends Fragment {
                          * Inside the new thread we cannot update the main thread So
                          * updating the main thread outside the new thread
                          */
-                        // Toast.makeText(LoginActivity.this, resp, Toast.LENGTH_LONG).show();
+                        // Toast.makeText(LoginActivity.this, respS, Toast.LENGTH_LONG).show();
 
 
                     }
@@ -652,7 +673,7 @@ public class Tracking_activity extends Fragment {
         protected void onPostExecute(Void aVoid) {
            // AndroidUtils.animateView(progressOverlay, image, animate, View.GONE, 0, 200);
      //       mProgressDialog.dismiss();
-            resp = "null";
+           // respS = "null";
             /*if (error == 1) {
 
                 // Toast.makeText(LoginActivity.this, "Wrong User Name or Password", Toast.LENGTH_SHORT).show();

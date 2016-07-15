@@ -15,12 +15,14 @@ import java.util.Map.Entry;
 public class ShareExternalServer {
 
 	public String shareRegIdWithAppServer(final Context context,
-			final String regId, final String email) {
+			final String regId, final String mobile, final String companyName, final String FName) {
 
 		String result = "";
-		Map<String, String> paramsMap = new HashMap<String, String>();
+		Map<String, String> paramsMap = new HashMap<>();
 		paramsMap.put("regId", regId);
-		paramsMap.put("email",email);
+		paramsMap.put("email",mobile);
+		paramsMap.put("email",companyName);
+		paramsMap.put("email",FName);
 		try {
 			URL serverUrl = null;
 			try {

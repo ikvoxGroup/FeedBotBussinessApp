@@ -351,7 +351,7 @@ public class LoginActivity extends ActionBarActivity {
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
                             finish();
-
+56
                         } else {
                *//* Toast.makeText(getApplicationContext(),
                         "Already Registered with GCM Server!",
