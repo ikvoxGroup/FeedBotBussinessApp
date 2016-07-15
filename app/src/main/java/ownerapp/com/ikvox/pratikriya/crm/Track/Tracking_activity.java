@@ -79,6 +79,7 @@ public class Tracking_activity extends Fragment {
     private static String url_getStatus = "http://feedbotappserver.cgihum6dcd.us-west-2.elasticbeanstalk.com/getStatus.do";
 
     private static String respS="failed";
+    private static String resp="failed";
     private String errorMsg;
 
     public static JSONArray QuerySrNumberjson = null;
@@ -92,9 +93,11 @@ public class Tracking_activity extends Fragment {
     public static ArrayList<String> QueryAssignedTo;
     public static ArrayList<String> QueryStatus;
     static ProgressDialog mProgressDialog;
+    static ProgressDialog mProgressDialog1;
 
     public static ArrayList<inf> query;
 
+    public static String QueryNumber;
     public static String AssignedTo;
     public static String AssignedBy;
     public static String Pos;
@@ -125,6 +128,10 @@ public class Tracking_activity extends Fragment {
         mProgressDialog.setIndeterminate(false);
         mProgressDialog.setMessage("Fetching Data!! Please Wait...");
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog1 = new ProgressDialog(getContext());
+        mProgressDialog1.setIndeterminate(false);
+        mProgressDialog1.setMessage("Submitting Data!! Please Wait...");
+        mProgressDialog1.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         mLayout = (SlidingUpPanelLayout) rootView.findViewById(R.id.sliding_layout_tracking);
         list = (LinearLayout) rootView.findViewById(R.id.dragViewTracking);
         list.setBackgroundColor(MainActivity.color);
@@ -171,7 +178,8 @@ public class Tracking_activity extends Fragment {
                             mylist.collapseGroup(lastExpandedPosition);
                         }
                         lastExpandedPosition = groupPosition;
-                        String qry= "select AssignedBy, AssignedTo, Status from "+CompanyName+"_"+selectedFromList+"_"+"Status "+"where QueryNumber = 'Q"+(groupPosition+1)+"'";
+                        QueryNumber="Q"+(groupPosition+1);
+                        String qry= "select AssignedBy, AssignedTo, Status from "+CompanyName+"_"+selectedFromList+"_"+"Status "+"where QueryNumber = '"+QueryNumber+"'";
                         qsdb=qdb.getWritableDatabase();
                         try {
                             Cursor c = qsdb.rawQuery(qry, null);
@@ -411,6 +419,8 @@ public class Tracking_activity extends Fragment {
                                 case R.id.rbassigned:
                                     logo1.setImageResource(R.drawable.assigned);
                                     l1.setColorFilter(Color.rgb(176, 62, 121));
+                                    Pos="assign";
+                                    new MyTask1().execute();
                                     dialog.dismiss();
                                     break;
                                 case R.id.rbprogress:
@@ -418,6 +428,19 @@ public class Tracking_activity extends Fragment {
                                     logo2.setImageResource(R.drawable.progress);
                                     l1.setColorFilter(Color.rgb(176, 62, 121));
                                     l2.setColorFilter(Color.rgb(202, 200, 57));
+                                    Pos="progress";
+                                    new MyTask1().execute();
+                                    dialog.dismiss();
+                                    break;
+                                case R.id.rbclose:
+                                    logo1.setImageResource(R.drawable.assigned);
+                                    logo2.setImageResource(R.drawable.progress);
+                                    logo3.setImageResource(R.drawable.closed);
+                                    l1.setColorFilter(Color.rgb(176, 62, 121));
+                                    l2.setColorFilter(Color.rgb(202, 200, 57));
+                                    l3.setColorFilter(Color.rgb(77, 202, 57));
+                                    Pos="close";
+                                    new MyTask1().execute();
                                     dialog.dismiss();
                                     break;
                             }
@@ -610,7 +633,7 @@ public class Tracking_activity extends Fragment {
                         QueryAssignedByjson = json.getJSONArray("assignedBy");
                         QueryAssignedTojson = json.getJSONArray("assignee");
                         QueryStatusjson = json.getJSONArray("crmstatus");
-
+Log.i("track",""+QuerySrNumberjson.toString()+","+QueryAssignedByjson.toString()+","+QueryAssignedTojson.toString()+","+QueryStatusjson.toString());
                         len=QuerySrNumberjson.length();
 
                     } catch (Exception e) {
@@ -697,6 +720,106 @@ public class Tracking_activity extends Fragment {
                 Toast.makeText(LoginActivity.this, "" + msg, Toast.LENGTH_SHORT).show();
             }*/
             //Toast.makeText(getApplicationContext(), "hiii", Toast.LENGTH_SHORT).show();*//*
+            super.onPostExecute(aVoid);
+        }
+
+    }
+
+    private class MyTask1 extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            //AndroidUtils.animateView(progressOverlay, image, animate, View.VISIBLE, 0.8f, 200);
+            mProgressDialog1.show();
+            super.onPreExecute();
+        }
+
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                  //  Log.i("kush",CompanyName+" "+FBName+" "+selectedFromList+" "+Assignee+" ");
+                    ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+                    postParameters.add(new BasicNameValuePair("CompanyName", CompanyName));
+                    postParameters.add(new BasicNameValuePair("BranchLocation",selectedFromList ));
+                    postParameters.add(new BasicNameValuePair("QueryNumber",QueryNumber ));
+                    postParameters.add(new BasicNameValuePair("status",Pos));
+                    postParameters.add(new BasicNameValuePair("assignee",AssignedTo ));
+                    postParameters.add(new BasicNameValuePair("assignedBy",AssignedBy));
+                    json = jParser.makeHttpRequest(url_setStatus, "GET", postParameters);
+                    String s = null;
+                    try {
+                        /*response = SimpleHttpClient
+                                .executeHttpPost(
+                                        "http://ikvoxserver.78kuyxr39b.us-west-2.elasticbeanstalk.com/login.do",
+                                        postParameters);*/
+
+                        s = json.getString("status");
+                        resp=s;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        //   network=1;
+                        errorMsg = e.getMessage();
+                    }
+                }
+            }).start();
+            try {
+                Thread.sleep(5000);
+                if (resp.equals("success"))
+                {
+                    sdb= getContext().openOrCreateDatabase(QueryDatabase.DBNAME,getContext().MODE_PRIVATE,null);
+                    sdb.execSQL("CREATE TABLE IF NOT EXISTS "
+                            + CompanyName+"_"+selectedFromList+"_"+"Status"
+                            + " (QueryNumber TEXT,AssignedBy TEXT ,AssignedTo TEXT,Status TEXT);");
+                    ContentValues value = new ContentValues();
+                    value.put("QueryNumber",QueryNumber);
+                    value.put("AssignedBy", AssignedBy);
+                    value.put("AssignedTo", AssignedTo);
+                    value.put("Status", Pos);
+
+                    sdb.insert(CompanyName+"_"+selectedFromList+"_"+"Status",null, value);
+                }
+
+                /**
+                 * Inside the new thread we cannot update the main thread So
+                 * updating the main thread outside the new thread
+                 */
+                // Toast.makeText(LoginActivity.this, resp, Toast.LENGTH_LONG).show();
+
+            } catch (Exception e1){
+                e1.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            mProgressDialog1.dismiss();
+            resp="null";
+            /*AndroidUtils.animateView(progressOverlay,image,animate, View.GONE, 0, 200);
+            resp="null";
+            if (error == 1) {
+
+                Toast.makeText(LoginActivity.this, "Wrong User Name or Password", Toast.LENGTH_SHORT).show();
+                error = 0;
+                network=0;
+            }
+            else if (network==1)
+            {
+                // Toast.makeText(LoginActivity.this, "Connectivity Problem!! Please try again and Check your Internet Connection.", Toast.LENGTH_SHORT).show();
+                //error = 0;
+                //network=0;
+
+            }
+
+            *//*if (!msg.equals(""))
+            {
+                Toast.makeText(LoginActivity.this, ""+msg, Toast.LENGTH_SHORT).show();
+            }*//*
+            //Toast.makeText(getApplicationContext(), "hiii", Toast.LENGTH_SHORT).show();*/
             super.onPostExecute(aVoid);
         }
 
