@@ -15,14 +15,14 @@ import java.util.Map.Entry;
 public class ShareExternalServer {
 
 	public String shareRegIdWithAppServer(final Context context,
-			final String regId, final String mobile, final String companyName, final String FName) {
+			final String regId, final String mobile, final String companyName) {
 
 		String result = "";
 		Map<String, String> paramsMap = new HashMap<>();
 		paramsMap.put("regId", regId);
-		paramsMap.put("email",mobile);
-		paramsMap.put("email",companyName);
-		paramsMap.put("email",FName);
+		paramsMap.put("mobile",mobile);
+		paramsMap.put("companyName",companyName);
+
 		try {
 			URL serverUrl = null;
 			try {
@@ -67,7 +67,10 @@ public class ShareExternalServer {
 				} else {
 					result = "Post Failure." + " Status: " + status;
 				}
-			} finally {
+			}catch(NullPointerException e) {
+
+			}finally
+			 {
 				if (httpCon != null) {
 					httpCon.disconnect();
 				}

@@ -12,11 +12,15 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
 
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    <uses-permission android:name="com.javapapers.android.permission.C2D_MESSAGE" />
+    <uses-permission android:name="ownerapp.com.ikvox.pratikriya.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
-
-
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <permission
+        android:name="ownerapp.com.ikvox.pratikriya.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
 
 
     <application
@@ -109,18 +113,18 @@
 
 
         <receiver
-            android:name="gcmNotification.GcmBroadcastReceiver"
+            android:name="ownerapp.com.ikvox.pratikriya.gcmNotification.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
-
+                <category android:name="ownerapp.com.ikvox.pratikriya" />
             </intent-filter>
         </receiver>
 
 
-        <service android:name="gcmNotification.GCMNotificationIntentService" /><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+        <service android:name="ownerapp.com.ikvox.pratikriya.gcmNotification.GCMNotificationIntentService" /><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
         <meta-data
             android:name="com.google.android.gms.version"

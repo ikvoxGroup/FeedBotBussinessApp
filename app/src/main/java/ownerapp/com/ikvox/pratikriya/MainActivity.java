@@ -68,6 +68,7 @@ import ownerapp.com.ikvox.pratikriya.RecyclerView.RecyclerViewUtils.ItemClickSup
 import ownerapp.com.ikvox.pratikriya.Utils.JsonParser;
 import ownerapp.com.ikvox.pratikriya.Utils.PicassoTransform.CircleTransformWhite;
 import ownerapp.com.ikvox.pratikriya.crm.CRM_activity;
+import ownerapp.com.ikvox.pratikriya.gcmNotification.ShareExternalServer;
 
 // You can check the methods that I use inside onCreate below menu methods
 
@@ -139,6 +140,16 @@ public class MainActivity extends ActionBarActivity {
     static ProgressDialog mProgressDialog;
     public static String CompanyName;
 
+    //private static final String REG_NAME = "REGID";
+  //  public static final String REG = "name";
+   // SharedPreferences reg;
+
+    public static final String REG_ID = "regId";
+
+    ShareExternalServer appUtil;
+    String regId,email;
+    AsyncTask<Void, Void, String> shareRegidTask;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -150,11 +161,20 @@ public class MainActivity extends ActionBarActivity {
         // Set content to the view
         setContentView(R.layout.activity_main);
         sp = getSharedPreferences(PREFER_NAME,MODE_PRIVATE);
-        String number= sp.getString(KEY_NAME,null);
+        final String number= sp.getString(KEY_NAME,null);
+        final String companyName=sp.getString(KEY_COMPANYNAME,null);
         UserNumber= (TextView)findViewById(R.id.textViewUsername);
         UserNumber.setText(number);
         //db = new MyDatabase(this);
+        appUtil = new ShareExternalServer();
+        final Context context = this;
+       // reg = getSharedPreferences(REG_NAME, MODE_PRIVATE);
+        // String regidS = reg.getString(REG, null);
 
+        SharedPreferences regid = getSharedPreferences(MainActivity.class.getSimpleName(),MODE_PRIVATE);
+        final String regidS = regid.getString(REG_ID, null);
+
+        Toast.makeText(MainActivity.this,regidS , Toast.LENGTH_SHORT).show();
         session = new UserSessionManager(getApplicationContext());
 
         //Setup Status Bar and Toolbar
@@ -179,6 +199,7 @@ public class MainActivity extends ActionBarActivity {
         mProgressDialog.setIndeterminate(false);
         mProgressDialog.setMessage("Syncing Data!! Please Wait...");
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
         location=new ArrayList<String>() ;
         Department=new ArrayList<String>() ;
         EmpName =new ArrayList<String>() ;
@@ -186,6 +207,26 @@ public class MainActivity extends ActionBarActivity {
         Phone_number=new ArrayList<String>() ;
         Emp_EmailID=new ArrayList<String>() ;
         Reporting_MailID=new ArrayList<String>() ;
+
+
+        shareRegidTask = new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                String result = appUtil.shareRegIdWithAppServer(context, regidS, number,companyName);
+                return result;
+
+            }
+            @Override
+            protected void onPostExecute(String result) {
+                shareRegidTask = null;
+                /*Toast.makeText(getApplicationContext(), result,
+                        Toast.LENGTH_LONG).show();*/
+            }
+
+
+        };
+        shareRegidTask.execute(null, null, null);
+
     }
 
     private void openCRM() {

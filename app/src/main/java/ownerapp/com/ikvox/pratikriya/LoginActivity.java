@@ -1,9 +1,12 @@
 package ownerapp.com.ikvox.pratikriya;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -12,9 +15,12 @@ import android.graphics.drawable.AnimationDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
@@ -24,15 +30,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import ownerapp.com.ikvox.pratikriya.Database.MyDatabase;
 import ownerapp.com.ikvox.pratikriya.LoginSessionManagement.UserSessionManager;
 import ownerapp.com.ikvox.pratikriya.ProgBarAppear.AndroidUtils;
+import ownerapp.com.ikvox.pratikriya.gcmNotification.Config;
 
 
 /**
@@ -76,7 +86,7 @@ public class LoginActivity extends ActionBarActivity {
     public static final String KEY_NAME = "name";
     SharedPreferences sp;
 
-    /*public static final String REG_ID = "regId";
+    public static final String REG_ID = "regId";
     private static final String APP_VERSION = "appVersion";
 
     static final String TAG = "Register Activity";
@@ -84,7 +94,12 @@ public class LoginActivity extends ActionBarActivity {
 
     GoogleCloudMessaging gcm;
     Context context;
-    String regId,mobile;*/
+    String regId,mobile;
+
+    private static final String REG_NAME = "REGID";
+    public static final String REG = "name";
+    SharedPreferences reg;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,13 +117,16 @@ public class LoginActivity extends ActionBarActivity {
         animate= (AnimationDrawable)image.getBackground();
         // User Session Manager
         session = new UserSessionManager(getApplicationContext());
-
+        context = getApplicationContext();
 
         loginB = (Button) findViewById(R.id.btn_login);
         Signup = (TextView)findViewById(R.id.link_signup);
 
         mNumber = (EditText) findViewById(R.id.input_number);
         password = (EditText) findViewById(R.id.input_password);
+
+        reg = getSharedPreferences(REG_NAME, MODE_PRIVATE);
+        editor = reg.edit();
 
         loginB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -225,7 +243,7 @@ public class LoginActivity extends ActionBarActivity {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+                    ArrayList<NameValuePair> postParameters = new ArrayList<>();
 
                     postParameters.add(new BasicNameValuePair("mobile", mNumberS));
                     postParameters.add(new BasicNameValuePair("password", passwordS));
@@ -288,18 +306,22 @@ public class LoginActivity extends ActionBarActivity {
                         value.put("EmailId", email);
                         value.put("Company", companyName);
                         sdb.insert("Login", null, value);
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+
+
+                       /* Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                        // intent.putExtra("regId", regId);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         // Add new Flag to start new Activity
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
-                        finish();
+                        finish();*/
 
-                        /*if (TextUtils.isEmpty(regId)) {
+                        if (TextUtils.isEmpty(regId)) {
                             regId = registerGCM();
-                            Log.d("RegisterActivity", "GCM RegId: " + regId);
+                           // Log.d("RegisterActivity", "GCM RegId: " + regId);
 
+                            editor.putString(REG, regId);
+                            editor.commit();
                             //spinner.setVisibility(View.INVISIBLE);
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             intent.putExtra("regId", regId);
@@ -310,10 +332,14 @@ public class LoginActivity extends ActionBarActivity {
                             finish();
 
                         } else {
-               *//* Toast.makeText(getApplicationContext(),
-                        "Already Registered with GCM Server!",
-                        Toast.LENGTH_LONG).show();*//*
+               // Toast.makeText(getApplicationContext(),"Already Registered with GCM Server!",Toast.LENGTH_LONG).show();
+
+
                             regId = registerGCM();
+
+                            editor.putString(REG, regId);
+                            editor.commit();
+
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             intent.putExtra("regId", regId);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -322,7 +348,7 @@ public class LoginActivity extends ActionBarActivity {
                             startActivity(intent);
                             finish();
 
-                        }*/
+                        }
 
                     } else {
                         ContentValues value = new ContentValues();
@@ -332,16 +358,23 @@ public class LoginActivity extends ActionBarActivity {
                         value.put("EmailId", email);
                         value.put("Company", companyName);
                         sdb.insert("Login", null, value);
+
+                        /*
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                       //  intent.putExtra("regId", regId);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         // Add new Flag to start new Activity
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
-                        finish();
-                       /* if (TextUtils.isEmpty(regId)) {
+                        finish();*/
+
+
+                        if (TextUtils.isEmpty(regId)) {
                             regId = registerGCM();
-                            Log.d("RegisterActivity", "GCM RegId: " + regId);
+                           // Log.d("RegisterActivity", "GCM RegId: " + regId);
+
+                            editor.putString(REG,regId);
+                            editor.commit();
 
                             //spinner.setVisibility(View.INVISIBLE);
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -351,12 +384,14 @@ public class LoginActivity extends ActionBarActivity {
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
                             finish();
-56
+
                         } else {
-               *//* Toast.makeText(getApplicationContext(),
-                        "Already Registered with GCM Server!",
-                        Toast.LENGTH_LONG).show();*//*
+              //  Toast.makeText(getApplicationContext(), "Already Registered with GCM Server!", Toast.LENGTH_LONG).show();
                             regId = registerGCM();
+
+                            editor.putString(REG, regId);
+                            editor.commit();
+
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             intent.putExtra("regId", regId);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -365,7 +400,7 @@ public class LoginActivity extends ActionBarActivity {
                             startActivity(intent);
                             finish();
 
-                        }*/
+                        }
                     }
                 } else if (resp.equals("Failed")) {
                     error = 1;
@@ -381,6 +416,7 @@ public class LoginActivity extends ActionBarActivity {
         protected void onPostExecute(Void aVoid) {
             AndroidUtils.animateView(progressOverlay,image,animate, View.GONE, 0, 200);
             resp="null";
+            Toast.makeText(getApplicationContext(),regId, Toast.LENGTH_SHORT).show();
             if (error == 1) {
 
                 Toast.makeText(LoginActivity.this, "Wrong User Name or Password", Toast.LENGTH_SHORT).show();
@@ -426,7 +462,7 @@ public class LoginActivity extends ActionBarActivity {
 
     }
 
-    /*public String registerGCM() {
+    public String registerGCM() {
 
         gcm = GoogleCloudMessaging.getInstance(this);
         regId = getRegistrationId(context);
@@ -435,17 +471,13 @@ public class LoginActivity extends ActionBarActivity {
 
             registerInBackground();
 
-            Log.d("RegisterActivity",
-                    "registerGCM - successfully registered with GCM server - regId: "
-                            + regId);
+          //  Log.d("RegisterActivity", "registerGCM - successfully registered with GCM server - regId: " + regId);
         } else {
-           *//* Toast.makeText(getApplicationContext(),
-                    "RegId already available. RegId: " + regId,
-                    Toast.LENGTH_LONG).show();*//*
+           // Toast.makeText(getApplicationContext(),"RegId already available. RegId: " + regId, Toast.LENGTH_LONG).show();
         }
         return regId;
-    }*/
-    /*private String getRegistrationId(Context context) {
+    }
+    private String getRegistrationId(Context context) {
         final SharedPreferences prefs = getSharedPreferences(
                 MainActivity.class.getSimpleName(), Context.MODE_PRIVATE);
         String registrationId = prefs.getString(REG_ID, "");
@@ -467,8 +499,7 @@ public class LoginActivity extends ActionBarActivity {
                     .getPackageInfo(context.getPackageName(), 0);
             return packageInfo.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
-            Log.d("RegisterActivity",
-                    "I never expected this! Going down, going down!" + e);
+          //  Log.d("RegisterActivity", "I never expected this! Going down, going down!" + e);
             throw new RuntimeException(e);
         }
     }
@@ -484,10 +515,14 @@ public class LoginActivity extends ActionBarActivity {
                     regId = gcm.register(Config.GOOGLE_PROJECT_ID);
                     Log.d("RegisterActivity", "registerInBackground - regId: "
                             + regId);
+
+
+
                     msg = "Device registered, registration ID=" + regId;
 
                     storeRegistrationId(context, regId);
                 } catch (IOException ex) {
+
                     msg = "Error :" + ex.getMessage();
                     Log.d("RegisterActivity", "Error: " + msg);
                 }
@@ -497,9 +532,7 @@ public class LoginActivity extends ActionBarActivity {
 
             @Override
             protected void onPostExecute(String msg) {
-                *//*Toast.makeText(getApplicationContext(),
-                        "Registered with GCM Server." + msg, Toast.LENGTH_LONG)
-                        .show();*//*
+               //Toast.makeText(getApplicationContext(), "Registered with GCM Server." + msg, Toast.LENGTH_LONG).show();
             }
         }.execute(null, null, null);
     }
@@ -508,12 +541,13 @@ public class LoginActivity extends ActionBarActivity {
                 MainActivity.class.getSimpleName(), Context.MODE_PRIVATE);
         int appVersion = getAppVersion(context);
         Log.i(TAG, "Saving regId on app version " + appVersion);
+
+
+
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(REG_ID, regId);
         editor.putInt(APP_VERSION, appVersion);
         editor.commit();
-    }*/
-
-
+    }
 
 }
