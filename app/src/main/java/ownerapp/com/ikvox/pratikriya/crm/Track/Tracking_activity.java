@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
@@ -98,10 +99,12 @@ public class Tracking_activity extends Fragment {
     public static ArrayList<inf> query;
 
     public static String QueryNumber;
+    public static String SubmitQueryNumber;
     public static String AssignedTo;
     public static String AssignedBy;
     public static String Pos;
 
+    public static int change=0;
 
     public Tracking_activity() {
         // Required empty public constructor
@@ -172,7 +175,6 @@ public class Tracking_activity extends Fragment {
                 mylist.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
                     @Override
                     public void onGroupExpand(int groupPosition) {
-
                         if (lastExpandedPosition != -1
                                 && groupPosition != lastExpandedPosition) {
                             mylist.collapseGroup(lastExpandedPosition);
@@ -190,11 +192,17 @@ public class Tracking_activity extends Fragment {
                                     Pos=c.getString(2);
                                 } while (c.moveToNext());
                             }
+                            else
+                            {
+                                AssignedBy="Action Not Taken";
+                                AssignedTo="Action not Taken";
+                                Pos="Open";
+                            }
                         }catch (Exception e)
                         {
                             AssignedBy="Action Not Taken";
                             AssignedTo="Action not Taken";
-                            Pos="open";
+                            Pos="Open";
                         }
                     }
                 });
@@ -345,13 +353,14 @@ public class Tracking_activity extends Fragment {
                                  boolean isLastChild, View convertView, ViewGroup parent) {
 
             View v = View.inflate(context, R.layout.status, null);
+
             Animate.animate(v, false);
         /*if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = infalInflater.inflate(R.layout.status, null);
         }*/
             TextView keyword = (TextView) v.findViewById(R.id.QueryKeyword);
-            TextView assignedBy = (TextView) v.findViewById(R.id.QueryAssigned);
+            final TextView assignedBy = (TextView) v.findViewById(R.id.QueryAssigned);
             LinearLayout ChangeStatus = (LinearLayout) v.findViewById(R.id.changeStatus);
             final TextView assignedTo = (TextView) v.findViewById(R.id.QueryAssignedBy);
             final TextView pos= (TextView) v.findViewById(R.id.pos);
@@ -369,108 +378,155 @@ public class Tracking_activity extends Fragment {
             assignedBy.setText("Assigned By: "+AssignedBy);
             assignedTo.setText("Assigned To: "+AssignedTo);
             pos.setText("Status: "+Pos);
-            if (pos.getText().toString().equals("close")) {
+            if (pos.getText().toString().contains("Close")) {
                 logo1.setImageResource(R.drawable.assigned);
                 logo2.setImageResource(R.drawable.progress);
                 logo3.setImageResource(R.drawable.closed);
                 l1.setColorFilter(Color.rgb(176, 62, 121));
                 l2.setColorFilter(Color.rgb(202, 200, 57));
                 l3.setColorFilter(Color.rgb(77, 202, 57));
-            } else if (pos.getText().toString().equals("progress")) {
+            } else if (pos.getText().toString().contains("Progress")) {
                 logo1.setImageResource(R.drawable.assigned);
                 logo2.setImageResource(R.drawable.progress);
                 l1.setColorFilter(Color.rgb(176, 62, 121));
                 l2.setColorFilter(Color.rgb(202, 200, 57));
-            } else if (pos.getText().toString().equals("assign")) {
+            } else if (pos.getText().toString().contains("Assign")) {
                 logo1.setImageResource(R.drawable.assigned);
                 l1.setColorFilter(Color.rgb(176, 62, 121));
             }
-            ChangeStatus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final AlertDialog.Builder ChangeStatus = new AlertDialog.Builder(context);
-                    View vw1 = v.inflate(context, R.layout.change_status, null);
-                    final AlertDialog dialog = ChangeStatus.create();
-                    Button submit = (Button) vw1.findViewById(R.id.submitStatus);
-                    dialog.setView(vw1);
-                    ChangeStatus.setView(vw1);
-                    dialog.show();
+            if(!pos.getText().toString().equals("Status: Open")) {
+                ChangeStatus.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final AlertDialog.Builder ChangeStatus = new AlertDialog.Builder(context);
+                        View vw1 = v.inflate(context, R.layout.change_status, null);
+                        final AlertDialog dialog = ChangeStatus.create();
+                        // Button submit = (Button) vw1.findViewById(R.id.submitStatus);
+                        dialog.setView(vw1);
+                        ChangeStatus.setView(vw1);
+                        dialog.show();
 
-                    final RadioButton rb1 = (RadioButton) vw1.findViewById(R.id.rbopen);
-                    final RadioButton rb2 = (RadioButton) vw1.findViewById(R.id.rbassigned);
-                    final RadioButton rb3 = (RadioButton) vw1.findViewById(R.id.rbprogress);
-                    final RadioButton rb4 = (RadioButton) vw1.findViewById(R.id.rbclose);
-                    final RadioGroup rg = (RadioGroup) vw1.findViewById(R.id.rgStatus);
-                    final Button sub = (Button) vw1.findViewById(R.id.submitStatus);
-                    //pos.setText(query.get(groupPosition).QueryStatus);
-                    if (pos.getText().toString().equals("open")) {
-                        rb1.setChecked(true);
-                    } else if (pos.getText().toString().equals("assign")) {
-                        rb2.setChecked(true);
-                    } else if (pos.getText().toString().equals("progress")) {
-                        rb3.setChecked(true);
-                    } else if (pos.getText().toString().equals("close")) {
-                        rb4.setChecked(true);
-                    }
-                    sub.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            switch (rg.getCheckedRadioButtonId()) {
-                                case R.id.rbassigned:
-                                    logo1.setImageResource(R.drawable.assigned);
-                                    l1.setColorFilter(Color.rgb(176, 62, 121));
-                                    Pos="assign";
-                                    new MyTask1().execute();
-                                    dialog.dismiss();
-                                    break;
-                                case R.id.rbprogress:
-                                    logo1.setImageResource(R.drawable.assigned);
-                                    logo2.setImageResource(R.drawable.progress);
-                                    l1.setColorFilter(Color.rgb(176, 62, 121));
-                                    l2.setColorFilter(Color.rgb(202, 200, 57));
-                                    Pos="progress";
-                                    new MyTask1().execute();
-                                    dialog.dismiss();
-                                    break;
-                                case R.id.rbclose:
-                                    logo1.setImageResource(R.drawable.assigned);
-                                    logo2.setImageResource(R.drawable.progress);
-                                    logo3.setImageResource(R.drawable.closed);
-                                    l1.setColorFilter(Color.rgb(176, 62, 121));
-                                    l2.setColorFilter(Color.rgb(202, 200, 57));
-                                    l3.setColorFilter(Color.rgb(77, 202, 57));
-                                    Pos="close";
-                                    new MyTask1().execute();
-                                    dialog.dismiss();
-                                    break;
-                            }
+                        final RadioButton rb1 = (RadioButton) vw1.findViewById(R.id.rbopen);
+                        final RadioButton rb2 = (RadioButton) vw1.findViewById(R.id.rbassigned);
+                        final RadioButton rb3 = (RadioButton) vw1.findViewById(R.id.rbprogress);
+                        final RadioButton rb4 = (RadioButton) vw1.findViewById(R.id.rbclose);
+                        final RadioGroup rg = (RadioGroup) vw1.findViewById(R.id.rgStatus);
+                        final Button sub = (Button) vw1.findViewById(R.id.submitStatus);
+                        final LinearLayout comment= (LinearLayout)vw1.findViewById(R.id.Area);
+                        //pos.setText(query.get(groupPosition).QueryStatus);
+                        if (pos.getText().toString().contains("Open")) {
+                            rb1.setChecked(true);
+                        } else if (pos.getText().toString().contains("Assign")) {
+                            rb2.setChecked(true);
+                        } else if (pos.getText().toString().contains("Progress")) {
+                            rb3.setChecked(true);
+                        } else if (pos.getText().toString().contains("Close")) {
+                            rb4.setChecked(true);
                         }
-                    });
-                }
-            });
+                        rb2.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                comment.removeAllViews();
+                                AutoCompleteTextView com= new AutoCompleteTextView(getActivity());
+                                com.setHint("Employee Name");
+                                comment.addView(com);
+                            }
+                        });
+                        rb1.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                comment.removeAllViews();
+                            }
+                        });
+                        rb3.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                comment.removeAllViews();
+                            }
+                        });
+                        rb4.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                comment.removeAllViews();
+                            }
+                        });
+                        sub.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                switch (rg.getCheckedRadioButtonId()) {
+                                    case R.id.rbopen:
+                                        logo1.setImageResource(R.drawable.assigned_blank);
+                                        logo2.setImageResource(R.drawable.progress_blank);
+                                        logo3.setImageResource(R.drawable.closed_blank);
+                                        l1.setColorFilter(Color.rgb(174, 174, 174));
+                                        l2.setColorFilter(Color.rgb(174, 174, 174));
+                                        l3.setColorFilter(Color.rgb(174, 174, 174));
+                                        Pos = "Open";
+                                        new MyTask1().execute();
+                                        if (change == 1) {
+                                            pos.setText("Status: " + Pos);
+                                            assignedTo.setText("Assigned To: " + AssignedTo);
+                                            assignedBy.setText("Assigned By: " + AssignedBy);
+                                        }
+                                        dialog.dismiss();
+                                        break;
+                                    case R.id.rbassigned:
+                                        logo1.setImageResource(R.drawable.assigned);
+                                        logo2.setImageResource(R.drawable.progress_blank);
+                                        logo3.setImageResource(R.drawable.closed_blank);
+                                        l1.setColorFilter(Color.rgb(176, 62, 121));
+                                        l2.setColorFilter(Color.rgb(174, 174, 174));
+                                        l3.setColorFilter(Color.rgb(174, 174, 174));
 
-        /*if (groupPosition == 0) {
-            v = View.inflate(context, R.layout.status, null);
-            Animate.animate(v,false);
-            //TextView txtView = (TextView) v.findViewById(R.id.txtChld1);
-            //txtView.setText("Green");
-            //txtView.setTextSize(15f);
-            //txtView.setBackgroundColor(Color.GREEN);
-        }
-        if (groupPosition == 1) {
-            v = View.inflate(context, R.layout.status, null);
-            Animate.animate(v,true);
+                                        Pos = "Assign";
+                                        new MyTask1().execute();
+                                        if (change == 1) {
+                                            pos.setText("Status: " + Pos);
+                                            assignedTo.setText("Assigned To: " + AssignedTo);
+                                            assignedBy.setText("Assigned By: " + AssignedBy);
+                                        }
+                                        dialog.dismiss();
+                                        break;
+                                    case R.id.rbprogress:
+                                        logo1.setImageResource(R.drawable.assigned);
+                                        logo2.setImageResource(R.drawable.progress);
+                                        logo3.setImageResource(R.drawable.closed_blank);
+                                        l1.setColorFilter(Color.rgb(176, 62, 121));
+                                        l2.setColorFilter(Color.rgb(202, 200, 57));
+                                        l3.setColorFilter(Color.rgb(174, 174, 174));
+                                        Pos = "Progress";
+                                        new MyTask1().execute();
+                                        if (change == 1) {
+                                            pos.setText("Status: " + Pos);
+                                            assignedTo.setText("Assigned To: " + AssignedTo);
+                                            assignedBy.setText("Assigned By: " + AssignedBy);
+                                        }
+                                        dialog.dismiss();
+                                        break;
+                                    case R.id.rbclose:
+                                        logo1.setImageResource(R.drawable.assigned);
+                                        logo2.setImageResource(R.drawable.progress);
+                                        logo3.setImageResource(R.drawable.closed);
+                                        l1.setColorFilter(Color.rgb(176, 62, 121));
+                                        l2.setColorFilter(Color.rgb(202, 200, 57));
+                                        l3.setColorFilter(Color.rgb(77, 202, 57));
+                                        Pos = "Close";
+                                        new MyTask1().execute();
+                                        if (change == 1) {
+                                            pos.setText("Status: " + Pos);
+                                            assignedTo.setText("Assigned To: " + AssignedTo);
+                                            assignedBy.setText("Assigned By: " + AssignedBy);
+                                        }
+                                        dialog.dismiss();
+                                        break;
+                                }
+                            }
+                        });
+                    }
+                });
+            }
 
-        }
-        if (groupPosition == 2) {
-            v = View.inflate(context, R.layout.status, null);
-        }
-        if (groupPosition == 3) {
-            v = View.inflate(context, R.layout.status, null);
-            //TextView txtView = (TextView) v.findViewById(R.id.txtChld1);
-            //txtView.setText("Purple");
-            //txtView.setTextSize(15f);
-        }*/
+
             v.invalidate();
             return v;
         }
@@ -514,50 +570,12 @@ public class Tracking_activity extends Fragment {
         }*/
 
             View v = convertView.inflate(context, R.layout.tracking_group_layout, null);
+            final LinearLayout ll= (LinearLayout)v.findViewById(R.id.track_group);
             TextView qry = (TextView) v.findViewById(R.id.txt1);
             qry.setText(query.get(groupPosition).Query);
-        /*if(groupPosition == 0)
-        {
-            qry.setText("Q1");
-            qry.setTextSize(15f);
-        }
-        if(groupPosition == 1)
-        {
-            qry.setText("Q2");
-            qry.setTextSize(15f);
-        }
-        if(groupPosition == 2)
-        {
-            qry.setText("Q3");
-            qry.setTextSize(15f);
-        }
-        if(groupPosition == 3)
-        {
-            qry.setText("Q4");
-            qry.setTextSize(15f);
-        }*/
+
             v.invalidate();
             return v;
-        /*View v = convertView.inflate(context, R.layout.tracking_group_layout, null);
-        TextView txtView = (TextView) v.findViewById(R.id.txt1);
-        if (groupPosition == 0) {
-            txtView.setText("Query 1");
-            txtView.setTextSize(15f);
-        }
-        if (groupPosition == 1) {
-            txtView.setText("Query 2");
-            txtView.setTextSize(15f);
-        }
-        if (groupPosition == 2) {
-            txtView.setText("Query 3");
-            txtView.setTextSize(15f);
-        }
-        if (groupPosition == 3) {
-            txtView.setText("Query 4");
-            txtView.setTextSize(15f);
-        }
-        v.invalidate();*/
-
         }
 
         @Override
@@ -632,7 +650,7 @@ public class Tracking_activity extends Fragment {
                         QuerySrNumberjson = json.getJSONArray("querySrno");
                         QueryAssignedByjson = json.getJSONArray("assignedBy");
                         QueryAssignedTojson = json.getJSONArray("assignee");
-                        QueryStatusjson = json.getJSONArray("crmstatus");
+                        QueryStatusjson = json.getJSONArray("crmStatus");
 Log.i("track",""+QuerySrNumberjson.toString()+","+QueryAssignedByjson.toString()+","+QueryAssignedTojson.toString()+","+QueryStatusjson.toString());
                         len=QuerySrNumberjson.length();
 
@@ -666,7 +684,7 @@ Log.i("track",""+QuerySrNumberjson.toString()+","+QueryAssignedByjson.toString()
                             QueryStatus.add(QueryStatusjson.get(i).toString());
                         }
                     }catch(JSONException e){
-
+                        Toast.makeText(getContext(), "Exception", Toast.LENGTH_SHORT).show();
                     }
 
 
@@ -674,14 +692,15 @@ Log.i("track",""+QuerySrNumberjson.toString()+","+QueryAssignedByjson.toString()
                     qsdb.execSQL("CREATE TABLE IF NOT EXISTS "
                             + CompanyName + "_" + selectedFromList + "_" + "Status"
                             + " (QueryNumber TEXT,AssignedBy TEXT ,AssignedTo TEXT,Status TEXT);");
+                    qsdb.execSQL("Delete from "+ CompanyName + "_" + selectedFromList + "_" + "Status");
                     int i;
-                    for (i = 0; i < QuerySrNumber.size(); i++) {
+                    for (i = 0; i < QuerySrNumberjson.length(); i++) {
                         ContentValues value = new ContentValues();
                         value.put("QueryNumber", QuerySrNumber.get(i).toString());
                         value.put("AssignedBy", QueryAssignedBy.get(i).toString());
                         value.put("AssignedTo", QueryAssignedTo.get(i).toString());
                         value.put("Status", QueryStatus.get(i).toString());
-                        sdb.insert(CompanyName + "_" + selectedFromList + "_" + "Status", null, value);
+                        qsdb.insert(CompanyName + "_" + selectedFromList + "_" + "Status", null, value);
                         /**
                          * Inside the new thread we cannot update the main thread So
                          * updating the main thread outside the new thread
@@ -769,8 +788,8 @@ Log.i("track",""+QuerySrNumberjson.toString()+","+QueryAssignedByjson.toString()
                 Thread.sleep(5000);
                 if (resp.equals("success"))
                 {
-                    sdb= getContext().openOrCreateDatabase(QueryDatabase.DBNAME,getContext().MODE_PRIVATE,null);
-                    sdb.execSQL("CREATE TABLE IF NOT EXISTS "
+                    qsdb= getContext().openOrCreateDatabase(QueryDatabase.DBNAME,getContext().MODE_PRIVATE,null);
+                    qsdb.execSQL("CREATE TABLE IF NOT EXISTS "
                             + CompanyName+"_"+selectedFromList+"_"+"Status"
                             + " (QueryNumber TEXT,AssignedBy TEXT ,AssignedTo TEXT,Status TEXT);");
                     ContentValues value = new ContentValues();
@@ -779,7 +798,8 @@ Log.i("track",""+QuerySrNumberjson.toString()+","+QueryAssignedByjson.toString()
                     value.put("AssignedTo", AssignedTo);
                     value.put("Status", Pos);
 
-                    sdb.insert(CompanyName+"_"+selectedFromList+"_"+"Status",null, value);
+                    qsdb.insert(CompanyName+"_"+selectedFromList+"_"+"Status",null, value);
+                    change=1;
                 }
 
                 /**
